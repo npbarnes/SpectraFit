@@ -18,6 +18,9 @@ Parameters = {
     QccSamples = 9, -- Samples from Qcc distribution
     EtaSamples = 9, -- Samples from Eta distribution
     AldermanGrantN = 32, -- N value from Alderman-Grant algorithm
+    snapshotInterval = 1000000  -- after this many spectra are
+                                -- calculated the program will
+                                -- take a snapshot
 }
 
 --[[
@@ -43,7 +46,7 @@ example: "1,[4,6],3,[9,14,2]" --> Set.create{1,4,5,6,3,9,11,13}
 --]]
 function _paramGen (fmt)
     if type(fmt) ~= "string" then
-        error("Format must be a string")
+        error("Format must be a string",2)
     end
 
     local set = {}
@@ -102,7 +105,7 @@ function _paramGen (fmt)
 
     -- final fmt should be empty
     if fmt ~= "" then
-        error("Malformed format",fmt)
+        error("Malformed format: "..fmt,2)
     end
 
     return set
@@ -120,25 +123,16 @@ function calculate(Qcc,Eta,sQcc,sEta)
 
     -- type checking
     if type(Qcc) ~= "number" then
-        error("Qcc must be a number")
+        error("Qcc must be a number",2)
     end
     if type(Eta) ~= "number" then
-        error("Eta must be a number")
+        error("Eta must be a number",2)
     end
     if type(sQcc) ~= "number" then
-        error("sQcc must be a number")
+        error("sQcc must be a number",2)
     end
     if type(sEta) ~= "number" then
-        error("sEta must be a number")
+        error("sEta must be a number",2)
     end
 end
 
---[[
-    spec must be a table containing arrays 'freq' and 'inten'
-that are the same length (i.e. the output from Spectrum.calc.dist
-or Spectrum.calc.single
---]]
-function Spectrum.save(spec, filename)
-    file = io.open(filename,"w")
-    io.output(file)
-end
