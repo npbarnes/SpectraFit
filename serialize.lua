@@ -1,44 +1,8 @@
---[[
-Code found in the Lua textbook, more general than the code
-found below, but I only intend to use simple tables so I'll go with
-a less general but more readable solution
---]]
---[[
-function basicSerialize (value)
-    if type(value) == "number" then
-        return tostring(value)
-    elseif type(value) == "string" then
-        return string.format("%q",value)
-    else
-        error("basicSerialize only handles numbers and strings", 2)
-    end
-end
-
-function save (name, value, saved)
-    saved = saved or {}       -- initial value
-    io.write(name, " = ")
-    if type(value) == "number" or type(value) == "string" then
-        io.write(basicSerialize(value), "\n")
-    elseif type(value) == "table" then
-        if saved[value] then    -- value already saved?
-            io.write(saved[value], "\n")  -- use its previous name
-        else
-            saved[value] = name   -- save name for next time
-            io.write("{}\n")     -- create a new table
-            for k,v in pairs(value) do      -- save its fields
-                local fieldname = string.format("%s[%s]", name,
-                basicSerialize(k))
-                save(fieldname, v, saved)
-            end
-        end
-    else
-        error("cannot save a " .. type(value))
-    end
-end
---]]
-
+-- indented write
+-- prints '\t' num times and passes
+-- the rest of the parameters to io.write()
 function iwrite(num, ...)
-    for i=num,1,-1 do
+    for i=1,num do
         io.write("\t")
     end
     if ... then
@@ -46,6 +10,16 @@ function iwrite(num, ...)
     end
 end
 
+--[[ serialize()
+printes a human and lua understandable representation of numbers,
+strings, and simple tables (i.e. no shared subtables, no cycles,
+and none of the keys are tables).
+Note 1: Shared subtables will print fine, but won't be properly
+reconstructed when the resulting code is run.
+Note 2: Cycles will result in an infinite loop
+Note 3: Haveing tables as keys will result in an error
+it is the programmers responsibility to be aware of these things
+--]]
 function serialize (item,indent)
     indent = indent or 0
 
@@ -57,6 +31,9 @@ function serialize (item,indent)
                                       -- and no cycles in the table
         io.write("{\n")
         for k,v in pairs(item) do
+            if type(k) == "table" then
+                error("Cannot serialize tables indexed by tables")
+            end
             iwrite(indent, "\t[")
             serialize(k)
             io.write("] = ")
@@ -69,8 +46,20 @@ function serialize (item,indent)
     end
 end
 
-function save (name, item)
+--[[
+serializes() the item with "name = " in front of it and a newline
+at the end.
+If file is given everything will be printed to file instead of stdout
+name should be a valid lua identifier, but it doesn't have to be
+--]]
+function save (name, item, file)
+    local currFile = io.output()
+    -- if file is nil then this line does nothing
+    io.output(file)
+
     io.write(name, " = ")
     serialize(item)
     io.write("\n")
+
+    io.output(currFile)
 end
