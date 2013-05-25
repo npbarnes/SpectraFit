@@ -27,6 +27,8 @@ function serialize (item,indent)
         io.write(item)
     elseif type(item) == "string" then
         io.write(string.format("%q", item))
+    elseif type(item) == "boolean" then
+        io.write(tostring(item))
     elseif type(item) == "table" then -- assume no shared subtables
                                       -- and no cycles in the table
         io.write("{\n")
