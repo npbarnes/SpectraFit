@@ -1,5 +1,3 @@
-require "Set"
-
 Parameters = {
     -- Spectrum parameters to be run
     -- every combination of values in these Sets will be simulated
