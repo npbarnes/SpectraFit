@@ -78,3 +78,6 @@ function combinations(...)
         end
     end
 end
+
+function allType(t)
+end
