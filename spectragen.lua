@@ -1,6 +1,6 @@
 Parameters = {
     -- Spectrum parameters to be run
-    -- every combination of values in these Sets will be simulated
+    -- every combination of values in these lists will be simulated
     -- populate manually, or using the paramGen() function
     Qcc = {},    -- Quadrupole coupling in Mhz
     sQcc = {},   -- Standard deviation of Qcc
@@ -157,4 +157,3 @@ function calculate(Qcc,Eta,sQcc,sEta)
         error("sEta must be a number",2)
     end
 end
-
