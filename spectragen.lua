@@ -157,3 +157,48 @@ function calculate(Qcc,Eta,sQcc,sEta)
         error("sEta must be a number",2)
     end
 end
+
+--[[
+returns a table of spectra from all combinations of the items in the
+lists of numbers Qcc,Eta,sQcc,and sEta. sQcc, and sEta default to {0}
+--]]
+function calculateAll(Qcc,Eta,sQcc,sEta)
+    -- default values
+    sQcc = sQcc or {0}
+    sEta = sEta or {0}
+
+    --type checking
+    if type(Qcc) ~= "table" then
+        error("Qcc must be a table",2)
+    end
+    if type(Eta) ~= "table" then
+        error("Eta must be a table",2)
+    end
+    if type(sQcc) ~= "table" then
+        error("sQcc must be a table",2)
+    end
+    if type(sEta) ~= "table" then
+        error("sEta must be a table",2)
+    end
+
+    for i,v in ipairs(Qcc) do
+        if type(v) ~= "number" then
+            error("All values in Qcc (treated as an array) must be numbers",2)
+        end
+    end
+    for i,v in ipairs(Eta) do
+        if type(v) ~= "number" then
+            error("All values in Eta (treated as an array) must be numbers",2)
+        end
+    end
+    for i,v in ipairs(sQcc) do
+        if type(v) ~= "number" then
+            error("All values in sQcc (treated as an array) must be numbers",2)
+        end
+    end
+    for i,v in ipairs(sEta) do
+        if type(v) ~= "number" then
+            error("All values in sEta (treated as an array) must be numbers",2)
+        end
+    end
+end

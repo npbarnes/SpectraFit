@@ -79,5 +79,13 @@ function combinations(...)
     end
 end
 
-function allType(t)
+-- arrayType checks the that the type of every element of array is ty
+-- (uses ipairs so it is ok to have other fields)
+function arrayType(array,ty)
+    for i,v in ipairs(array) do
+        if type(v) ~= ty then
+            return false
+        end
+    end
+    return true
 end
