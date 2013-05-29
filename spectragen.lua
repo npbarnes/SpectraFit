@@ -1,4 +1,9 @@
-Parameters = {
+State = {
+    action = "None" -- Holds a string that describes what is being
+                    -- done right now
+}
+
+State.runParam = {
     -- Spectrum parameters to be run
     -- every combination of values in these lists will be simulated
     -- populate manually, or using the paramGen() function
@@ -6,16 +11,31 @@ Parameters = {
     sQcc = {},   -- Standard deviation of Qcc
     Eta = {},    -- Asymetry parameter
     sEta = {},   -- Standard deviation of Eta
+    current = {  -- This table holds the glass parameters currently
+        Qcc = 0, -- being calculated
+        sQcc = 0,
+        Eta = 0,
+        sEta = 0,
 
-    -- Physical parameters
-    larmor = 32.329, -- Mhz
+        n = 0,   -- This is the n'th spectrum calculated on this run
+    }
+}
+
+State.physParam = {
+    -- Physical parameters of the glass
+    larmor = 32.239, -- MHz
     spin = 3,
+}
 
+State.simParam = {
     -- Simulation parameters
-    bins = 1024, -- Number of bins in the simulated spectrum
     QccSamples = 9, -- Samples from Qcc distribution
     EtaSamples = 9, -- Samples from Eta distribution
     AldermanGrantN = 32, -- N value from Alderman-Grant algorithm
+}
+
+State.ioSettings = {
+    bins = 1024, -- Number of bins in the simulated spectrum
     snapshotInterval = 1000  -- after this many spectra are
                                 -- calculated the program will
                                 -- take a snapshot
