@@ -1,6 +1,8 @@
 State = {
-    action = "None" -- Holds a string that describes what is being
+    action = "Init" -- Holds a string that describes what is being
                     -- done right now
+                    -- in the event of a crash this can be used to
+                    -- find where to restart
 }
 
 State.runParam = {
@@ -29,6 +31,8 @@ State.physParam = {
 
 State.simParam = {
     -- Simulation parameters
+    sampleRange = 2,-- define the range to take samples from
+                    -- (i.g. 2 standard deviations from the mean)
     QccSamples = 9, -- Samples from Qcc distribution
     EtaSamples = 9, -- Samples from Eta distribution
     AldermanGrantN = 32, -- N value from Alderman-Grant algorithm
@@ -44,7 +48,7 @@ State.ioSettings = {
 --[[
     The arguments to this function are all string literals
 that are passed on to _paramGen() and put into apropriate
-places in the param table
+places in the param table (i.e. State.runParam).
 distributions are optional default value is '0' for each
 --]]
 function paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
@@ -220,5 +224,10 @@ function calculateAll(Qcc,Eta,sQcc,sEta)
         if type(v) ~= "number" then
             error("All values in sEta (treated as an array) must be numbers",2)
         end
+    end
+
+
+    for Q,E,sQ,sE in combinations(Qcc,Eta,sQcc,sEta) do
+        save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)
     end
 end
