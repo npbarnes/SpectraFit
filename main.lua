@@ -42,6 +42,11 @@ State.simParam = {
     QccSamples = 9, -- Samples from Qcc distribution
     EtaSamples = 9, -- Samples from Eta distribution
     AldermanGrantN = 32, -- N value from Alderman-Grant algorithm
+    -- Function that maps orientation and physical parameters to a
+    -- frequency
+    FreqFunc = function (theta, phi, ...)
+        error("No frequency function assigned.")
+    end
 }
 
 State.ioSettings = {
