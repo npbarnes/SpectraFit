@@ -1,4 +1,4 @@
-require"main.lua"
+require "main.lua"
 
 --[[
     The arguments to this function are all string literals
