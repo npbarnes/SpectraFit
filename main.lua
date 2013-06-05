@@ -1,8 +1,8 @@
 --[[
-This is the main driver for the SpectraFit Lua project all other files
-that need access to the State table must require"main.lua" in order to
-get bring State into scope.  main is intended to handle
-initialization, settings, and frontend UI.
+This is the main driver for the SpectraFit Lua project it will use
+dofile so that State is in scope for other operations get bring State
+into scope.  main is intended to handle initialization, settings, and
+frontend UI, the rest can be found in other files.
 --]]
 State = {
     action = "Init" -- Holds a string that describes what is being
@@ -42,11 +42,6 @@ State.simParam = {
     QccSamples = 9, -- Samples from Qcc distribution
     EtaSamples = 9, -- Samples from Eta distribution
     AldermanGrantN = 32, -- N value from Alderman-Grant algorithm
-    -- Function that maps orientation and physical parameters to a
-    -- frequency
-    FreqFunc = function (theta, phi, ...)
-        error("No frequency function assigned.")
-    end
 }
 
 State.ioSettings = {
@@ -55,3 +50,5 @@ State.ioSettings = {
                                 -- calculated the program will
                                 -- take a snapshot
 }
+
+dofile "spectragen.lua"
