@@ -1,4 +1,4 @@
-function incPos(pos,sizes)
+local incPos = function (pos,sizes)
     -- increment the first pos
     pos[1] = pos[1] + 1
     for i,size in ipairs(sizes) do
