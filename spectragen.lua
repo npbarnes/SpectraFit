@@ -1,4 +1,6 @@
-require "main.lua"
+require "helpers.lua"
+
+dofile "aldermanGrant.lua"
 
 --[[
     The arguments to this function are all string literals
@@ -162,25 +164,17 @@ function calculateAll(Qcc,Eta,sQcc,sEta)
         error("sEta must be a table",2)
     end
 
-    for i,v in ipairs(Qcc) do
-        if type(v) ~= "number" then
-            error("All values in Qcc (treated as an array) must be numbers",2)
-        end
+    if arrayType(Qcc, "number") then
+        error("All values in Qcc (treated as an array) must be numbers",2)
     end
-    for i,v in ipairs(Eta) do
-        if type(v) ~= "number" then
-            error("All values in Eta (treated as an array) must be numbers",2)
-        end
+    if arrayType(Eta, "number") then
+        error("All values in Eta (treated as an array) must be numbers",2)
     end
-    for i,v in ipairs(sQcc) do
-        if type(v) ~= "number" then
-            error("All values in sQcc (treated as an array) must be numbers",2)
-        end
+    if arrayType(sQcc,"number") then
+        error("All values in sQcc (treated as an array) must be numbers",2)
     end
-    for i,v in ipairs(sEta) do
-        if type(v) ~= "number" then
-            error("All values in sEta (treated as an array) must be numbers",2)
-        end
+    if arrayType(sEta, "number") then
+        error("All values in sEta (treated as an array) must be numbers",2)
     end
 
 
