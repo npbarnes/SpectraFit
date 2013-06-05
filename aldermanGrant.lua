@@ -14,9 +14,8 @@ local I = State.physParam.spin
 -- 1986 D.W. Alderman et al, "Methods for Analyzing Spectroscopic Line
 -- Shapes.  NMR Solid Powder Patterns" J. Chem. Phys., Vol. 84, No. 7
 function aldermanGrant()
-    -- Initialize the spectrum to be returned
-    -- keys are frequencies (left side of bin inclusive), values are
-    -- intensities in an arbitrary scale
+    -- tents will be in the form
+    -- {{high = 12.2,mid = 11.0,low = 9.8, weight = 3.2},...}
     local tents = {}
 
     -- for each transition (i.e. each spectral line)
