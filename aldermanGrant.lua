@@ -29,11 +29,12 @@ local I = State.physParam.spin
 -- the N value used in the calculation.
 -- This function should be called once for each line in the single
 -- crystal spectrum.
-function AG.frequencies()
+function AG.frequencies(...)
     local freq = {}
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in intersections(N) do
+        table[i][j] = freqFunc((N-i-j)/math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2)), ...)
     end
 end
