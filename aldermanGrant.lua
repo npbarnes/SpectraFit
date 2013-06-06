@@ -23,12 +23,9 @@ local I = State.physParam.spin
 -- "tents" that will finally be used to create a spectrum histogram
 -- frequencies will be in the form of a 2-d array indexed so that
 -- freq[i][j] will give you the frequency calculated at the point
--- (i,j) on the octohedron described in the paper
+-- (i,j) on the octohedron described in the paper. freq.N will store
+-- the N value used in the calculation.
 function AG.frequencies()
-    -- tents will be in the form
-    -- {{high = 12.2,mid = 11.0,low = 9.8, weight = 3.2},...}
-    local tents = {}
-
     local frequencies = {}
 
     -- for each transition (i.e. each spectral line)
