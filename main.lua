@@ -51,4 +51,4 @@ State.ioSettings = {
                                 -- take a snapshot
 }
 
-dofile "spectragen.lua"
+require "spectragen"
