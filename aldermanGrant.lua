@@ -5,6 +5,8 @@ information on these algorithms can be found in the following paper
 Shapes.  NMR Solid Powder Patterns" J. Chem. Phys., Vol. 84, No. 7
 --]]
 
+require "helpers.lua"
+
 -- A table to hold Alderman-Grant algorithms
 AG = {}
 
@@ -32,10 +34,6 @@ function AG.frequencies()
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
-    for i=-N, N do
-        --Notice that only certain j's are allowed based on i
-        --(or vice versa) such that i+j <= N
-        for j=-(N-math.abs(i)), N-math.abs(i) do
-        end
+    for i,j in intersections(N) do
     end
 end

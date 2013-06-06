@@ -89,3 +89,31 @@ function arrayType(array,ty)
     end
     return true
 end
+
+-- this is a helper for aldermanGrant.lua, it gives all possible
+-- indecies for the intersections on the upper half of the tetrahedron
+-- that is, all integer combinations of i and j such that:
+-- abs(i) <= N
+-- abs(j) <= N
+-- abs(i)+abs(j) <= N
+function intersections(n)
+    N = math.floor(n)
+    if n ~= N then
+        error("n must be an integer",2)
+    end
+
+    local i = -N-1
+    local j = 0
+    return function ()
+        if i >= N then
+            return nil
+        elseif j < N-math.abs(i) then
+            j = j+1
+            return i,j
+        else
+            i = i+1
+            j = -(N-math.abs(i))
+            return i,j
+        end
+    end
+end
