@@ -25,17 +25,17 @@ local I = State.physParam.spin
 -- freq[i][j] will give you the frequency calculated at the point
 -- (i,j) on the octohedron described in the paper. freq.N will store
 -- the N value used in the calculation.
+-- This function should be called once for each line in the single
+-- crystal spectrum.
 function AG.frequencies()
-    local frequencies = {}
+    local freq = {}
+    freq["N"] = N
 
-    -- for each transition (i.e. each spectral line)
-    -- m represents the transition from the magnetic quantum number m
-    -- to m-1
-    for m = -(I-1),I do
-        -- 'i' and 'j' are the indecies of the points on each face
-        for i=-N, N do
-            for j=-(N-math.abs(i)), N-math.abs(i) do
-            end
+    -- 'i' and 'j' are the indecies of the points on each face
+    for i=-N, N do
+        --Notice that only certain j's are allowed based on i
+        --(or vice versa) such that i+j <= N
+        for j=-(N-math.abs(i)), N-math.abs(i) do
         end
     end
 end
