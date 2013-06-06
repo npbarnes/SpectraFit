@@ -26,13 +26,23 @@ local larmor = State.physParam.larmor
 local bins = Sate.ioSettings.bins
 local I = State.physParam.spin
 
+-- returns distance from the origin times N
+local RN = function (i,j)
+    return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
+end
+
 -- returns the cos of the polar angle theta given i, and j
 local cosTheta = function (i,j)
-    return (N-i-j)/math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
+    return (N-i-j)/RN(i,j)
+end
+
+local sinTheta = function (i,j)
+    return math.sqrt(1 - math.pow(N-i-j,2)/(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2)))
 end
 
 -- returns cos^2 of the azimuthal angle phi given i, and j
 local cos2Phi = function (i,j)
+    return ( i/RN(i,j) )/( sinTheta(i,j) )
 end
 
 -- returns the list of frequencies that can then be used to create the
