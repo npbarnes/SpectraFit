@@ -10,10 +10,10 @@ where i = x/N and j = y/N and z can be determined by the equation
 x+y+z = 1
 --]]
 
-require "helpers.lua"
+h = require "helpers"
 
 -- A table to hold Alderman-Grant algorithms
-AG = {}
+local AG = {}
 
 local N = State.simParam.AldermanGrantN
 local bins = State.ioSettings.bins
@@ -23,7 +23,7 @@ end
 local Qcc = State.runParam.current.Qcc
 local Eta = State.runParam.current.Eta
 local larmor = State.physParam.larmor
-local bins = Sate.ioSettings.bins
+local bins = State.ioSettings.bins
 local I = State.physParam.spin
 
 -- returns distance from the origin times N
@@ -58,7 +58,9 @@ function AG.frequencies(...)
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
-    for i,j in intersections(N) do
+    for i,j in h.intersections(N) do
         table[i][j] = freqFunc(cosTheta(i,j), cos2Phi(i,j), ...)
     end
 end
+
+return AG

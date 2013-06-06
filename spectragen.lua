@@ -1,6 +1,5 @@
-require "helpers.lua"
-
-dofile "aldermanGrant.lua"
+h = require "helpers"
+AG = require "aldermanGrant"
 
 --[[
     The arguments to this function are all string literals
@@ -164,21 +163,21 @@ function calculateAll(Qcc,Eta,sQcc,sEta)
         error("sEta must be a table",2)
     end
 
-    if arrayType(Qcc, "number") then
+    if h.arrayType(Qcc, "number") then
         error("All values in Qcc (treated as an array) must be numbers",2)
     end
-    if arrayType(Eta, "number") then
+    if h.arrayType(Eta, "number") then
         error("All values in Eta (treated as an array) must be numbers",2)
     end
-    if arrayType(sQcc,"number") then
+    if h.arrayType(sQcc,"number") then
         error("All values in sQcc (treated as an array) must be numbers",2)
     end
-    if arrayType(sEta, "number") then
+    if h.arrayType(sEta, "number") then
         error("All values in sEta (treated as an array) must be numbers",2)
     end
 
 
-    for Q,E,sQ,sE in combinations(Qcc,Eta,sQcc,sEta) do
+    for Q,E,sQ,sE in h.combinations(Qcc,Eta,sQcc,sEta) do
         save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)
     end
 end

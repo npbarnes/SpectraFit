@@ -1,4 +1,5 @@
-local incPos = function (pos,sizes)
+local helpers = {}
+local function incPos (pos,sizes)
     -- increment the first pos
     pos[1] = pos[1] + 1
     for i,size in ipairs(sizes) do
@@ -10,7 +11,7 @@ local incPos = function (pos,sizes)
     end
 end
 
-function combinations(...)
+function helpers.combinations(...)
     local arg = table.pack(...)
 
     -- First check for nil arguments
@@ -81,7 +82,7 @@ end
 
 -- arrayType checks the that the type of every element of array is ty
 -- (uses ipairs so it is ok to have other fields)
-function arrayType(array,ty)
+function helpers.arrayType(array,ty)
     for i,v in ipairs(array) do
         if type(v) ~= ty then
             return false
@@ -96,7 +97,7 @@ end
 -- abs(i) <= N
 -- abs(j) <= N
 -- abs(i)+abs(j) <= N
-function intersections(n)
+function helpers.intersections(n)
     N = math.floor(n)
     if n ~= N then
         error("n must be an integer",2)
@@ -117,3 +118,5 @@ function intersections(n)
         end
     end
 end
+
+return helpers
