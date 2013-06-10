@@ -68,7 +68,7 @@ end
 --[[
 takes the return value of AG.frequencies and returns the "tents"
 in the form:
-{{high = 32, low = 31.3, weight = 2.1},..., totalWeight = 1.1}
+{{high = 32, low = 31.3, weight = 2.1},...}
 --]]
 function AG.tents(freqs)
 end
