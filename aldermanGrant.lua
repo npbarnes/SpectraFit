@@ -45,14 +45,16 @@ local cos2Phi = function (i,j)
     return ( i/RN(i,j) )/( sinTheta(i,j) )
 end
 
--- returns the list of frequencies that can then be used to create the
--- "tents" that will finally be used to create a spectrum histogram
--- frequencies will be in the form of a 2-d array indexed so that
--- freq[i][j] will give you the frequency calculated at the point
--- (i,j) on the octahedron described in the paper. freq.N will store
--- the N value used in the calculation.
--- This function should be called once for each line in the single
--- crystal spectrum.
+--[[
+returns the list of frequencies that can then be used to create the
+"tents" that will finally be used to create a spectrum histogram
+frequencies will be in the form of a 2-d array indexed so that
+freq[i][j] will give you the frequency calculated at the point
+(i,j) on the octahedron described in the paper. freq.N will store
+the N value used in the calculation.
+This function should be called once for each line in the single
+crystal spectrum.
+--]]
 function AG.frequencies(...)
     local freq = {}
     freq["N"] = N
@@ -61,6 +63,20 @@ function AG.frequencies(...)
     for i,j in h.intersections(N) do
         table[i][j] = freqFunc(cosTheta(i,j), cos2Phi(i,j), ...)
     end
+end
+
+--[[
+takes the return value of AG.frequencies and returns the "tents"
+in the form:
+{{high = 32, low = 31.3, weight = 2.1},..., totalWeight = 1.1}
+--]]
+function AG.tents(freqs)
+end
+
+--[[
+converts tents into a spectrum histogram
+--]]
+function AG.histogram(tents)
 end
 
 return AG
