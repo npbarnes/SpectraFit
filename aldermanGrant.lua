@@ -10,7 +10,7 @@ where i = x/N and j = y/N and z can be determined by the equation
 x+y+z = 1
 --]]
 
-h = require "helpers"
+local h = require "helpers"
 
 -- A table to hold Alderman-Grant algorithms
 local AG = {}
