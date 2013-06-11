@@ -91,6 +91,25 @@ function helpers.arrayType(array,ty)
     return true
 end
 
+-- copy tables
+local function tabCopy(t,seen)
+    seen = seen or {}
+    if t == nil then return nil end
+    if seen[t] then return seen[t] end
+
+    local nt = {}
+    for k,v in pairs(t) do
+        if type(v) == "table" then
+            nt[k] = tabCopy(v,seen)
+        else
+            nt[k] = v
+        end
+    end
+    seen[t] = nt
+    return nt
+end
+helpers.tabCopy = tabCopy
+
 -- this is a helper for aldermanGrant.lua, it gives all possible
 -- indecies for the intersections on the upper half of the tetrahedron
 -- that is, all integer combinations of i and j such that:
