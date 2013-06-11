@@ -138,4 +138,125 @@ function helpers.intersections(n)
     end
 end
 
+--[[
+functions for moving between nodes on the triangle graph
+triangles are represented in the form:
+{m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
+--]]
+
+local function moveU(tri)
+    tri.m.j = tri.m.j + 1
+    tri.l.j = tri.l.j + 1
+    tri.r.j = tri.r.j + 1
+end
+local function moveD(tri)
+    tri.m.j = tri.m.j - 1
+    tri.l.j = tri.l.j - 1
+    tri.r.j = tri.r.j - 1
+end
+
+local function moveR(tri)
+    tri.m.i = tri.m.i + 1
+    tri.l.i = tri.l.i + 1
+    tri.r.i = tri.r.i + 1
+end
+local function moveL(tri)
+    tri.m.i = tri.m.i - 1
+    tri.l.i = tri.l.i - 1
+    tri.r.i = tri.r.i - 1
+end
+
+local function mirror(tri)
+    ret = tabCopy(tri)
+    ret.l.i = -ret.l.i
+    ret.l.j = -ret.l.j
+    ret.m.i = -ret.m.i
+    ret.m.j = -ret.m.j
+    ret.r.i = -ret.r.i
+    ret.r.j = -ret.r.j
+    return ret
+end
+
+--[[
+generator function for the iterator factory below (triangles).  there
+are four triangle orientations with two orientations occupying each
+face of the octahedron such that opposite quadrants have the same two
+orientations.
+--]]
+local function triGen(N)
+    local firstTri -- The first triangle defines the orientation
+    local topTri   -- The first triangle in a row
+    local tri      -- The current triangle under consideration
+    -- First and third quadrants
+    -- Orientation 1
+    firstTri = {m={i=0,j=0},l={i=1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N do
+        for j=1,N-i+1 do
+            coroutine.yield(tabCopy(tri))-- First quadrant
+            coroutine.yield(mirror(tri)) -- Third quadrant
+            moveR(tri)
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+    -- Orientation 2
+    firstTri = {m={i=1,j=1},l={i=1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N-1 do -- there are fewer triangles in these orientations
+        for j=1,N-i do
+            coroutine.yield(tabCopy(tri))-- First quadrant
+            coroutine.yield(mirror(tri)) -- Thrid quadrant
+            moveR(tri)
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+
+    -- Second and fourth quadrants
+    -- Orientation 3
+    firstTri = {m={i=0,j=0},l={i=-1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N do
+        for j=1,N-i+1 do
+            coroutine.yield(tabCopy(tri))-- Second
+            coroutine.yield(mirror(tri)) -- Fourth
+            moveL(tri) -- moving left now
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+    -- Orientation 4
+    firstTri = {m={i=-1,j=1},l={i=-1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N-1 do -- there are fewer triangles in these orientations
+        for j=1,N-i do
+            coroutine.yield(tabCopy(tri))-- Second
+            coroutine.yield(mirror(tri)) -- Fourth
+            moveL(tri) -- moving left
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+end
+
+--[[
+an iterator factory that takes a number N, that is the Alderman-Grant
+N parameter. The iterator iterates through all of the triangles in the
+upper half of the octahedron.
+triangles are represented in the form:
+{m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
+--]]
+function helpers.triangles(N)
+    local co = coroutine.create(function () triGen(N) end)
+    return function ()
+        local code, res = coroutine.resume(co)
+        return res
+    end
+end
+
 return helpers
