@@ -245,7 +245,12 @@ upper half of the octahedron.
 triangles are represented in the form:
 {m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
 --]]
-function helpers.triangles(N)
+function helpers.triangles(n)
+    local N = math.floor(n)
+    if N ~= n then
+        error("N must be an integer",2)
+    end
+
     local co = coroutine.create(function () triGen(N) end)
     return function ()
         local code, res = coroutine.resume(co)
