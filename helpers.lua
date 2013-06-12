@@ -113,8 +113,8 @@ helpers.tabCopy = tabCopy
 -- this is a helper for aldermanGrant.lua, it gives all possible
 -- indecies for the intersections on the upper half of the tetrahedron
 -- that is, all integer combinations of i and j such that:
--- abs(i) <= N
--- abs(j) <= N
+-- abs(i) <= N and
+-- abs(j) <= N and
 -- abs(i)+abs(j) <= N
 function helpers.intersections(n)
     N = math.floor(n)
