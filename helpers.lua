@@ -198,7 +198,7 @@ generator function for the iterator factory below (triangles).  It
 takes advantage of the 4 fold rotational symmetry of the octahedron In
 the first quadrant there are two orientations of triangles, it's
 fairly strightforward to iterate through each in turn. The rest of the
-triangles can be found by rotations
+triangles can be found by translations and reflections
 --]]
 local function triGen(N)
     local firstTri -- The first triangle defines the orientation
