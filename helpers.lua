@@ -144,6 +144,7 @@ triangles are represented in the form:
 {m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
 --]]
 
+-- The move function change tri
 local function moveU(tri)
     tri.m.j = tri.m.j + 1
     tri.l.j = tri.l.j + 1
@@ -166,78 +167,71 @@ local function moveL(tri)
     tri.r.i = tri.r.i - 1
 end
 
-local function mirror(tri)
+-- The mirror functions return reflected triangles without changing tri
+-- reflect over the X axis
+local function mirrorX(tri)
     ret = tabCopy(tri)
-    ret.l.i = -ret.l.i
     ret.l.j = -ret.l.j
-    ret.m.i = -ret.m.i
     ret.m.j = -ret.m.j
-    ret.r.i = -ret.r.i
     ret.r.j = -ret.r.j
     return ret
 end
 
+-- reflect over the Y axis
+local function mirrorY(tri)
+    ret = tabCopy(tri)
+    ret.l.i = -ret.l.i
+    ret.m.i = -ret.m.i
+    ret.r.i = -ret.r.i
+    return ret
+end
+
+-- reflect over both X and Y in turn
+local function mirrorXY(tri)
+    -- This is a bit less efficient because it makes two copies, but
+    -- it reduces code duplication
+    return mirrorY( mirrorX(tri) )
+end
+
 --[[
-generator function for the iterator factory below (triangles).  there
-are four triangle orientations with two orientations occupying each
-face of the octahedron such that opposite quadrants have the same two
-orientations.
+generator function for the iterator factory below (triangles).  It
+takes advantage of the 4 fold rotational symmetry of the octahedron In
+the first quadrant there are two orientations of triangles, it's
+fairly strightforward to iterate through each in turn. The rest of the
+triangles can be found by rotations
 --]]
 local function triGen(N)
     local firstTri -- The first triangle defines the orientation
     local topTri   -- The first triangle in a row
     local tri      -- The current triangle under consideration
-    -- First and third quadrants
+
     -- Orientation 1
     firstTri = {m={i=0,j=0},l={i=1,j=0},r={i=0,j=1}}
     topTri = tabCopy(firstTri)
     tri = tabCopy(firstTri)
     for i=1,N do
         for j=1,N-i+1 do
-            coroutine.yield(tabCopy(tri))-- First quadrant
-            coroutine.yield(mirror(tri)) -- Third quadrant
-            moveR(tri)
-        end
-        moveU(topTri)
-        tri = tabCopy(topTri)
-    end
-    -- Orientation 2
-    firstTri = {m={i=1,j=1},l={i=1,j=0},r={i=0,j=1}}
-    topTri = tabCopy(firstTri)
-    tri = tabCopy(firstTri)
-    for i=1,N-1 do -- there are fewer triangles in these orientations
-        for j=1,N-i do
-            coroutine.yield(tabCopy(tri))-- First quadrant
-            coroutine.yield(mirror(tri)) -- Thrid quadrant
+            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(mirrorY(tri)) -- Second
+            coroutine.yield(mirrorXY(tri))-- Third
+            coroutine.yield(mirrorX(tri)) -- Fourth
             moveR(tri)
         end
         moveU(topTri)
         tri = tabCopy(topTri)
     end
 
-    -- Second and fourth quadrants
-    -- Orientation 3
-    firstTri = {m={i=0,j=0},l={i=-1,j=0},r={i=0,j=1}}
+    -- Orientation 2
+    firstTri = {m={i=1,j=1},l={i=1,j=0},r={i=0,j=1}}
     topTri = tabCopy(firstTri)
     tri = tabCopy(firstTri)
-    for i=1,N do
-        for j=1,N-i+1 do
-            coroutine.yield(tabCopy(tri))-- Second
-            coroutine.yield(mirror(tri)) -- Fourth
-            moveL(tri) -- moving left now
-        end
-        moveU(topTri)
-        tri = tabCopy(topTri)
-    end
-    -- Orientation 4
-    firstTri = {m={i=-1,j=1},l={i=-1,j=0},r={i=0,j=1}}
-    topTri = tabCopy(firstTri)
-    tri = tabCopy(firstTri)
-    for i=1,N-1 do -- there are fewer triangles in these orientations
+    for i=1,N-1 do -- there are fewer triangles in this orientation
         for j=1,N-i do
-            coroutine.yield(tabCopy(tri))-- Second
-            coroutine.yield(mirror(tri)) -- Fourth
-            moveL(tri) -- moving left
+            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(mirrorY(tri)) -- Second
+            coroutine.yield(mirrorXY(tri))-- Third
+            coroutine.yield(mirrorX(tri)) -- Fourth
+            moveR(tri)
         end
         moveU(topTri)
         tri = tabCopy(topTri)
