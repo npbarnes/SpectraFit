@@ -82,6 +82,28 @@ in the form:
 {{high = 32, mid = 31.5, low = 31.3, weight = 2.1},...}
 --]]
 function AG.tents(freqs)
+    local ret = {}
+    for tri in h.triangles(freqs.n) do
+        local freql,freqm,freqr,intenl,intenm,intenr
+        freql = freqs[tri.l.i][tri.l.j].freq
+        freqm = freqs[tri.m.i][tri.m.j].freq
+        freqr = freqs[tri.r.i][tri.r.j].freq
+        intenl = freqs[tri.l.i][tri.l.j].inten
+        intenm = freqs[tri.m.i][tri.m.j].inten
+        intenr = freqs[tri.r.i][tri.r.j].inten
+        table.insert(ret,{
+            high=math.max(freql,freqm,freqr),
+            low=math.min(freql,freqm,freqr),
+            -- find mid my sorting the three, then choosing the
+            -- middle one
+            mid = table.sort({freql,freqm,freqr})[2],
+            weight = intenl/math.pow(R(tri.l.i,tri.l.j),3) +
+                     intenm/math.pow(R(tri.m.i,tri.m.j),3) +
+                     intenr/math.pow(R(tri.r.i,tri.r.j),3)
+        })
+    end
+
+    return ret
 end
 
 --[[
