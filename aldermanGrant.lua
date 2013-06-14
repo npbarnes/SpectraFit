@@ -17,8 +17,11 @@ local AG = {}
 
 local N = State.simParam.AldermanGrantN
 local bins = State.ioSettings.bins
-local freqFunc = freqFunc or function (cosTheta,cos2Phi,...)
+local freqFunc = freqFunc or function (cosTheta,cos2Phi)
     error("no freqFunc defined")
+end
+local intenFunc = intenFunc or function (cosTheta,cos2Phi)
+    error("no intenFunc defined")
 end
 local Qcc = State.runParam.current.Qcc
 local Eta = State.runParam.current.Eta
@@ -49,19 +52,22 @@ end
 returns the list of frequencies that can then be used to create the
 "tents" that will finally be used to create a spectrum histogram
 frequencies will be in the form of a 2-d array indexed so that
-freq[i][j] will give you the frequency calculated at the point
-(i,j) on the octahedron described in the paper. freq.N will store
-the N value used in the calculation.
+freq[i][j] will give you a table in the form:
+{freq = 32,inten = 3}
+freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
-function AG.frequencies(...)
+function AG.frequencies()
     local freq = {}
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in h.intersections(N) do
-        table[i][j] = freqFunc(cosTheta(i,j), cos2Phi(i,j), ...)
+        table[i][j] = {
+            freq = freqFunc(cosTheta(i,j), cos2Phi(i,j)),
+            inten = intenFunc(cosTheta(i,j), cos2Phi(i,j))
+        }
     end
 end
 
