@@ -34,6 +34,11 @@ local RN = function (i,j)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
 end
 
+-- returns the distance from the origin
+local R = function (i,j)
+    return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))/N
+end
+
 -- returns the cos of the polar angle theta given i, and j
 local cosTheta = function (i,j)
     return (N-i-j)/RN(i,j)
