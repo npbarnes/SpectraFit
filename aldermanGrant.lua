@@ -15,20 +15,6 @@ local h = require "helpers"
 -- A table to hold Alderman-Grant algorithms
 local AG = {}
 
-local N = State.simParam.AldermanGrantN
-local bins = State.ioSettings.bins
-local freqFunc = freqFunc or function (cosTheta,cos2Phi)
-    error("no freqFunc defined")
-end
-local intenFunc = intenFunc or function (cosTheta,cos2Phi)
-    error("no intenFunc defined")
-end
-local Qcc = State.runParam.current.Qcc
-local Eta = State.runParam.current.Eta
-local larmor = State.physParam.larmor
-local bins = State.ioSettings.bins
-local I = State.physParam.spin
-
 -- returns distance from the origin times N
 local RN = function (i,j)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
@@ -63,7 +49,7 @@ freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
-function AG.frequencies()
+function AG.frequencies(N, freqFunc, intenFunc)
     local freq = {}
     freq["N"] = N
 
@@ -109,7 +95,7 @@ end
 --[[
 converts tents into a spectrum histogram
 --]]
-function AG.histogram(tents)
+function AG.histogram(tents, nbins, first, last)
 end
 
 return AG
