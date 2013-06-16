@@ -109,7 +109,7 @@ end
 --[[
 converts tents into a spectrum histogram
 --]]
-function AG.histogram(tents)
+function AG.histogram(tents, nbins, first, last)
 end
 
 return AG
