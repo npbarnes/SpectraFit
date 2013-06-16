@@ -83,7 +83,7 @@ in the form:
 --]]
 function AG.tents(freqs)
     local ret = {}
-    for tri in h.triangles(freqs.n) do
+    for tri in h.triangles(freqs.N) do
         local freql,freqm,freqr,intenl,intenm,intenr
         freql = freqs[tri.l.i][tri.l.j].freq
         freqm = freqs[tri.m.i][tri.m.j].freq
