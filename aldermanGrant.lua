@@ -9,11 +9,9 @@ positions on each face of that sphere are given by two numbers i, and j
 where i = x/N and j = y/N and z can be determined by the equation
 x+y+z = 1
 --]]
+local AG = {}
 
 local h = require "helpers"
-
--- A table to hold Alderman-Grant algorithms
-local AG = {}
 
 -- returns distance from the origin times N
 local RN = function (i,j)
