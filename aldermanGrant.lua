@@ -63,7 +63,7 @@ freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
-function AG.frequencies()
+function AG.frequencies(N, freqFunc, intenFunc)
     local freq = {}
     freq["N"] = N
 
