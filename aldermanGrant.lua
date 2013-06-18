@@ -12,6 +12,7 @@ x+y+z = 1
 local AG = {}
 
 local h = require "helpers"
+local Spectrum = require "spectrum"
 
 -- returns distance from the origin times N
 local RN = function (i,j)
