@@ -25,7 +25,9 @@ local function Spectrum(nbins,start,binsize)
 
     -- Public Methods
     function obj.getInten(freq)
-        if freq < min or freq >= max then
+        if type(freq) ~= "number" then
+            error("number expected. Got: ".. type(freq))
+        elseif freq < min or freq >= max then
             error("Frequency out of range: "..min.."-"..max)
         end
 
