@@ -24,6 +24,16 @@ local function Spectrum(nbins,start,binsize)
     local max = start + nbins*binsize
     local spec = newSpec(nbins, start, binsize)
 
+    -- Private Methods
+    -- return an iterator to go through the bins
+    local function bins()
+        local i = 0
+        return function()
+            i = i+1
+            return i, spec[i]
+        end
+    end
+
     -- Public Methods
     function obj.getBin(i)
         if type(i) ~= "number" then
