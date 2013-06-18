@@ -1,3 +1,4 @@
+-- Helper functions
 local function newSpec(nbins, first, binsize)
     local ret = {}
     for i=1,nbins do
