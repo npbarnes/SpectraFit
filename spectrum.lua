@@ -51,6 +51,22 @@ local function Spectrum(nbins,start,binsize)
         return spec[i]
     end
 
+    function obj.getN()
+        return n
+    end
+
+    function obj.getMin()
+        return min
+    end
+
+    function obj.getMax()
+        return max
+    end
+
+    function obj.getBinsize()
+        return step
+    end
+
     return obj
 end
 
