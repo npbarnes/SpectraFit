@@ -8,11 +8,7 @@ end
 
 local meta = {
     __index = function (o, i)
-        if type(i) ~= "number" then
-            return nil
-        else
-            return o.getBin(i)
-        end
+        return o.getBin(i)
     end
 }
 
@@ -43,7 +39,7 @@ local function Spectrum(nbins,start,binsize)
     end
 
     function obj.getBin(i)
-        if i ~= math.floor(i) then
+        if type(i) ~= "number" or i ~= math.floor(i) then
             error("bin index must be an integer")
         end
         return spec[i]
