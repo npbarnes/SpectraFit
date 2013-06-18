@@ -47,13 +47,13 @@ local function Spectrum(nbins,start,binsize)
             local currFreq = spec[i].freq
             local nextFreq = currFreq + step
             if currFreq <= freq and freq < nextFreq then
-                return spec[i]
+                return i, spec[i]
             end
         end
     end
 
     function obj.getInten(freq)
-        return obj.findBin(freq).inten
+        return select(2,obj.findBin(freq)).inten
     end
 
     function obj.getN()
