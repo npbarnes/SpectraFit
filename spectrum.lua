@@ -5,8 +5,20 @@ local function newSpec(nbins, first, binsize)
     end
     return ret
 end
+
+local meta = {
+    __index = function (o, i)
+        if type(i) ~= "number" then
+            return nil
+        else
+            return o.getBin(i)
+        end
+    end
+}
+
 local function Spectrum(nbins,start,binsize)
     local obj = {}
+    setmetatable(obj,meta)
 
     -- Private Fields
     local n = nbins
