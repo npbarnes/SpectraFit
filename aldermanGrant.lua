@@ -92,9 +92,9 @@ function AG.tents(freqs)
 end
 
 --[[
-converts tents into a spectrum histogram
+adds tents into spec
 --]]
-function AG.histogram(tents, nbins, first, last)
+function AG.histogram(tents, spec)
 end
 
 return AG
