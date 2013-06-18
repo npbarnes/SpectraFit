@@ -72,6 +72,16 @@ local function Spectrum(nbins,start,binsize)
         return step
     end
 
+    -- add or subtract intensity from one bin
+    -- isfreq is a boolean for choosing if pos should be interpreted
+    -- as a bin number or a frequency
+    function obj.insert(value, pos, isfreq)
+        if not isfreq then
+            pos = obj.findBin(pos)
+        end
+        spec[pos] = spec[pos] + value
+    end
+
     return obj
 end
 
