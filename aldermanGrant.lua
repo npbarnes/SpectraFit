@@ -15,27 +15,27 @@ local h = require "helpers"
 local Spectrum = require "spectrum"
 
 -- returns distance from the origin times N
-local RN = function (i,j)
+local RN = function (i,j,N)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
 end
 
 -- returns the distance from the origin
-local R = function (i,j)
+local R = function (i,j,N)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))/N
 end
 
 -- returns the cos of the polar angle theta given i, and j
-local cosTheta = function (i,j)
-    return (N-i-j)/RN(i,j)
+local cosTheta = function (i,j,N)
+    return (N-i-j)/RN(i,j,N)
 end
 
-local sinTheta = function (i,j)
+local sinTheta = function (i,j,N)
     return math.sqrt(1 - math.pow(N-i-j,2)/(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2)))
 end
 
 -- returns cos^2 of the azimuthal angle phi given i, and j
-local cos2Phi = function (i,j)
-    return ( i/RN(i,j) )/( sinTheta(i,j) )
+local cos2Phi = function (i,j,N)
+    return ( i/RN(i,j,N) )/( sinTheta(i,j,N) )
 end
 
 --[[
@@ -55,8 +55,8 @@ function AG.frequencies(N, freqFunc, intenFunc)
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in h.intersections(N) do
         table[i][j] = {
-            freq = freqFunc(cosTheta(i,j), cos2Phi(i,j)),
-            inten = intenFunc(cosTheta(i,j), cos2Phi(i,j))
+            freq = freqFunc(cosTheta(i,j,N), cos2Phi(i,j,N)),
+            inten = intenFunc(cosTheta(i,j,N), cos2Phi(i,j,N))
         }
     end
 end
