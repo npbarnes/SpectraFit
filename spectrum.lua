@@ -30,7 +30,11 @@ local function Spectrum(nbins,start,binsize)
         local i = 0
         return function()
             i = i+1
-            return i, spec[i]
+            if i>#spec then
+                return nil
+            else
+                return i, spec[i].freq, spec[i].inten
+            end
         end
     end
 
