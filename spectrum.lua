@@ -25,7 +25,18 @@ local function Spectrum(nbins,start,binsize)
     local spec = newSpec(nbins, start, binsize)
 
     -- Public Methods
-    function obj.getInten(freq)
+    function obj.getBin(i)
+        if type(i) ~= "number" then
+            error("bin index must be an integer. Got: "..type(i))
+        elseif i ~= math.floor(i) then
+            error("bin index must be an integer. Got: "..i)
+        elseif i<1 or i>#spec then
+            error("bin index out of range: 1 - " .. #spec)
+        end
+        return spec[i]
+    end
+
+    function obj.findBin(freq)
         if type(freq) ~= "number" then
             error("number expected. Got: ".. type(freq))
         elseif freq < min or freq >= max then
@@ -36,20 +47,13 @@ local function Spectrum(nbins,start,binsize)
             local currFreq = spec[i].freq
             local nextFreq = currFreq + step
             if currFreq <= freq and freq < nextFreq then
-                return spec[i].inten
+                return spec[i]
             end
         end
     end
 
-    function obj.getBin(i)
-        if type(i) ~= "number" then
-            error("bin index must be an integer. Got: "..type(i))
-        elseif i ~= math.floor(i) then
-            error("bin index must be an integer. Got: "..i)
-        elseif i<1 or i>#spec then
-            error("bin index out of range: 1 - " .. #spec)
-        end
-        return spec[i]
+    function obj.getInten(freq)
+        return obj.findBin(freq).inten
     end
 
     function obj.getN()
