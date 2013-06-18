@@ -16,7 +16,12 @@ local function Spectrum(nbins,start,binsize)
     local spec = newSpec(nbins, first, last)
 
     -- Public Methods
-    -- TODO
+    function obj.getBin(i)
+        if i ~= math.floor(i) then
+            error("bin index must be an integer")
+        end
+        return spec[i]
+    end
 
     return obj
 end
