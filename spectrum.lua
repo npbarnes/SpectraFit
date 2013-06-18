@@ -16,6 +16,20 @@ local function Spectrum(nbins,start,binsize)
     local spec = newSpec(nbins, first, last)
 
     -- Public Methods
+    function obj.getInten(freq)
+        if freq < min or freq >= max then
+            error("Frequency out of range: "..min.."-"..max)
+        end
+
+        for i=1,n do
+            local currFreq = spec[i].freq
+            local nextFreq = currFreq + step
+            if currFreq <= freq and freq < nextFreq then
+                return spec[i].inten
+            end
+        end
+    end
+
     function obj.getBin(i)
         if i ~= math.floor(i) then
             error("bin index must be an integer")
