@@ -25,7 +25,7 @@ local function Spectrum(nbins,start,binsize)
     local min = start
     local step = binsize
     local max = start + nbins*binsize
-    local spec = newSpec(nbins, first, last)
+    local spec = newSpec(nbins, start, binsize)
 
     -- Public Methods
     function obj.getInten(freq)
