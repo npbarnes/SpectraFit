@@ -41,6 +41,8 @@ local function Spectrum(nbins,start,binsize)
     function obj.getBin(i)
         if type(i) ~= "number" or i ~= math.floor(i) then
             error("bin index must be an integer")
+        elseif i<1 or i>#spec then
+            error("bin index out of range")
         end
         return spec[i]
     end
