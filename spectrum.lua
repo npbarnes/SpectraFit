@@ -55,7 +55,7 @@ local function Spectrum(nbins,start,binsize)
         if type(freq) ~= "number" then
             error("number expected. Got: ".. type(freq))
         elseif freq < min or freq >= max then
-            error("Frequency out of range: "..min.."-"..max)
+            error("Frequency out of range: ["..min..","..max..")")
         end
 
         for i=1,n do
