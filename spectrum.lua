@@ -48,7 +48,7 @@ local function Spectrum(nbins,start,binsize)
         elseif i<1 or i>#spec then
             error("bin index out of range: 1 - " .. #spec)
         end
-        return spec[i]
+        return spec[i].freq, spec[i].inten
     end
 
     function obj.findBin(freq)
