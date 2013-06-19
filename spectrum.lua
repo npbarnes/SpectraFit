@@ -96,6 +96,14 @@ local function Spectrum(nbins,start,binsize)
         spec[pos] = spec[pos] + value
     end
 
+    -- add other to obj bin by bin
+    -- they must have identical frequencies
+    function obj.add(other)
+        for pos,freq,inten in bins() do
+            obj.insert(other[pos].inten,pos)
+        end
+    end
+
     return obj
 end
 
