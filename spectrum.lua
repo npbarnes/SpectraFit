@@ -58,13 +58,8 @@ local function Spectrum(nbins,start,binsize)
             error("Frequency out of range: ["..min..","..max..")")
         end
 
-        for i=1,n do
-            local currFreq = spec[i].freq
-            local nextFreq = currFreq + step
-            if currFreq <= freq and freq < nextFreq then
-                return i, spec[i]
-            end
-        end
+        local i = math.floor((freq-start)/step)+1
+        return i, spec[i]
     end
 
     function obj.getInten(freq)
