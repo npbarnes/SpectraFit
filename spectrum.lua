@@ -104,6 +104,13 @@ local function Spectrum(nbins,start,binsize)
         end
     end
 
+    -- Return a copy of obj
+    function obj.copy()
+        local ret = Spectrum(n,min,step)
+        ret.add(obj)
+        return ret
+    end
+
     return obj
 end
 
