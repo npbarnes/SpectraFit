@@ -59,7 +59,7 @@ local function Spectrum(nbins,start,binsize)
         end
 
         local i = math.floor((freq-start)/step)+1
-        return i, spec[i]
+        return i, spec[i].freq, spec[i].inten
     end
 
     function obj.getInten(freq)
