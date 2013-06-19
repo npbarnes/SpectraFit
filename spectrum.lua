@@ -89,7 +89,7 @@ local function Spectrum(nbins,start,binsize)
         if not isfreq then
             pos = obj.findBin(pos)
         end
-        spec[pos] = spec[pos] + value
+        spec[pos].inten = spec[pos].inten + value
     end
 
     -- add other to obj bin by bin
