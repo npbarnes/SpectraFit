@@ -7,6 +7,7 @@ local function newSpec(nbins, first, binsize)
     return ret
 end
 
+-- Metatable for spectrum objects
 local meta = {
     __index = function (o, i)
         return o.getBin(i)
