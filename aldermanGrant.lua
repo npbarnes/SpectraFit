@@ -9,48 +9,33 @@ positions on each face of that sphere are given by two numbers i, and j
 where i = x/N and j = y/N and z can be determined by the equation
 x+y+z = 1
 --]]
-
-local h = require "helpers"
-
--- A table to hold Alderman-Grant algorithms
 local AG = {}
 
-local N = State.simParam.AldermanGrantN
-local bins = State.ioSettings.bins
-local freqFunc = freqFunc or function (cosTheta,cos2Phi)
-    error("no freqFunc defined")
-end
-local intenFunc = intenFunc or function (cosTheta,cos2Phi)
-    error("no intenFunc defined")
-end
-local Qcc = State.runParam.current.Qcc
-local Eta = State.runParam.current.Eta
-local larmor = State.physParam.larmor
-local bins = State.ioSettings.bins
-local I = State.physParam.spin
+local h = require "helpers"
+local Spectrum = require "spectrum"
 
 -- returns distance from the origin times N
-local RN = function (i,j)
+local RN = function (i,j,N)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))
 end
 
 -- returns the distance from the origin
-local R = function (i,j)
+local R = function (i,j,N)
     return math.sqrt(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2))/N
 end
 
 -- returns the cos of the polar angle theta given i, and j
-local cosTheta = function (i,j)
-    return (N-i-j)/RN(i,j)
+local cosTheta = function (i,j,N)
+    return (N-i-j)/RN(i,j,N)
 end
 
-local sinTheta = function (i,j)
+local sinTheta = function (i,j,N)
     return math.sqrt(1 - math.pow(N-i-j,2)/(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2)))
 end
 
 -- returns cos^2 of the azimuthal angle phi given i, and j
-local cos2Phi = function (i,j)
-    return ( i/RN(i,j) )/( sinTheta(i,j) )
+local cos2Phi = function (i,j,N)
+    return ( i/RN(i,j,N) )/( sinTheta(i,j,N) )
 end
 
 --[[
@@ -63,15 +48,15 @@ freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
-function AG.frequencies()
+function AG.frequencies(N, freqFunc, intenFunc)
     local freq = {}
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in h.intersections(N) do
         table[i][j] = {
-            freq = freqFunc(cosTheta(i,j), cos2Phi(i,j)),
-            inten = intenFunc(cosTheta(i,j), cos2Phi(i,j))
+            freq = freqFunc(cosTheta(i,j,N), cos2Phi(i,j,N)),
+            inten = intenFunc(cosTheta(i,j,N), cos2Phi(i,j,N))
         }
     end
 end
@@ -107,9 +92,79 @@ function AG.tents(freqs)
 end
 
 --[[
-converts tents into a spectrum histogram
+Returns a spectrum with nbins, with frequencies starting at start and
+a binsize of binsize
 --]]
-function AG.histogram(tents)
+function AG.histogram(tents, nbins, start, binsize)
+    local ret = Spectrum(nbins,start,binsize)
+
+    for _, tent in ipairs(tents) do
+        local maxBin, fmax = ret.findBin(tent.high)
+        local midBin, fmid = ret.findBin(tent.mid)
+        local minBin, fmin = ret.findBin(tent.low)
+        local weight = tent.weight
+
+        for i=minBin, maxBin do
+            local flow = ret[i]
+            local fhigh = ret[i] + ret.getBinsize()
+            -- A
+            if flow <= fmin and fmax < fhigh then
+                ret.insert(weight,i)
+            -- B
+            elseif fhigh <= fmin then
+                error("fhigh is less than (or equal to) fmin")
+            -- C
+            elseif flow <= fmin and fmin < fhigh and fhigh <= fmid then
+                ret.insert(
+                    (((fhigh-fmin)^2)/
+                    ((fmax-fmin)*(fmid-fmin)))*weight,
+                    i)
+            -- D
+            elseif fmin < flow and fhigh <= fmid then
+                ret.insert(
+                    (((fhigh-flow)*(fhigh+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin)))*weight,
+                    i)
+            -- E
+            elseif flow <= fmin and fmid < fhigh and fhigh <= fmax then
+                ret.insert(
+                    ((fmid-fmin)/(fmax-fmin)) +
+                    ((fhigh-fmid)*(2*fmax-fhigh-fmid)/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- F
+            elseif fmin < flow and flow <= fmid and fmid < fhigh and fhigh < fmax then
+                ret.insert(
+                    ((((fmid-flow)*(fmid+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin))) +
+                    (((fhigh-fmid)*(2*fmax-fhigh-fmid))/
+                    ((fmax-fmin)*(fmax-fmid))))*weight,
+                    i)
+            -- G
+            elseif fmin < flow and flow <= fmid and fmax < fhigh then
+                ret.insert(
+                    ((((fmid-flow)*(fmid+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin)))+
+                    ((fmax-fmid)/(fmax-fmin)))*weight,
+                    i)
+            -- H
+            elseif fmid < flow and fhigh <= fmax then
+                ret.insert(
+                    (((fhigh-flow)*(2*fmax-fhigh-flow))/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- I
+            elseif fmid < flow and flow <= fmax and fmax < fhigh then
+                ret.insert(
+                    (((fmax-flow)^2)/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- J
+            elseif fmax < flow then
+                error("fmax is less than flow")
+            end
+        end
+    end
 end
 
 return AG
