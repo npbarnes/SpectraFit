@@ -92,9 +92,79 @@ function AG.tents(freqs)
 end
 
 --[[
-adds tents into spec
+Returns a spectrum with nbins, with frequencies starting at start and
+a binsize of binsize
 --]]
-function AG.histogram(tents, spec)
+function AG.histogram(tents, nbins, start, binsize)
+    local ret = Spectrum(nbins,start,binsize)
+
+    for _, tent in ipairs(tents) do
+        local maxBin, fmax = ret.findBin(tent.high)
+        local midBin, fmid = ret.findBin(tent.mid)
+        local minBin, fmin = ret.findBin(tent.low)
+        local weight = tent.weight
+
+        for i=minBin, maxBin do
+            local flow = ret[i]
+            local fhigh = ret[i] + ret.getBinsize()
+            -- A
+            if flow <= fmin and fmax < fhigh then
+                ret.insert(weight,i)
+            -- B
+            elseif fhigh <= fmin then
+                error("fhigh is less than (or equal to) fmin")
+            -- C
+            elseif flow <= fmin and fmin < fhigh and fhigh <= fmid then
+                ret.insert(
+                    (((fhigh-fmin)^2)/
+                    ((fmax-fmin)*(fmid-fmin)))*weight,
+                    i)
+            -- D
+            elseif fmin < flow and fhigh <= fmid then
+                ret.insert(
+                    (((fhigh-flow)*(fhigh+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin)))*weight,
+                    i)
+            -- E
+            elseif flow <= fmin and fmid < fhigh and fhigh <= fmax then
+                ret.insert(
+                    ((fmid-fmin)/(fmax-fmin)) +
+                    ((fhigh-fmid)*(2*fmax-fhigh-fmid)/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- F
+            elseif fmin < flow and flow <= fmid and fmid < fhigh and fhigh < fmax then
+                ret.insert(
+                    ((((fmid-flow)*(fmid+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin))) +
+                    (((fhigh-fmid)*(2*fmax-fhigh-fmid))/
+                    ((fmax-fmin)*(fmax-fmid))))*weight,
+                    i)
+            -- G
+            elseif fmin < flow and flow <= fmid and fmax < fhigh then
+                ret.insert(
+                    ((((fmid-flow)*(fmid+flow-2*fmin))/
+                    ((fmax-fmin)*(fmid-fmin)))+
+                    ((fmax-fmid)/(fmax-fmin)))*weight,
+                    i)
+            -- H
+            elseif fmid < flow and fhigh <= fmax then
+                ret.insert(
+                    (((fhigh-flow)*(2*fmax-fhigh-flow))/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- I
+            elseif fmid < flow and flow <= fmax and fmax < fhigh then
+                ret.insert(
+                    (((fmax-flow)^2)/
+                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    i)
+            -- J
+            elseif fmax < flow then
+                error("fmax is less than flow")
+            end
+        end
+    end
 end
 
 return AG
