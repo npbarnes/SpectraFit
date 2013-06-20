@@ -1,5 +1,8 @@
-h = require "helpers"
-AG = require "aldermanGrant"
+local SG = {}
+
+local h = require "helpers"
+local AG = require "aldermanGrant"
+local Spectrum = require "spectrum"
 
 --[[
     The arguments to this function are all string literals
@@ -7,7 +10,7 @@ that are passed on to _paramGen() and put into apropriate
 places in the param table (i.e. State.runParam).
 distributions are optional default value is '0' for each
 --]]
-function paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
+function SG.paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
     -- Set distributions to a default value of 0
     sQccfmt = sQccfmt or '0'
     sEtafmt = sEtafmt or '0'
@@ -43,7 +46,7 @@ end
         Give a more useful error message for a malformed format
         (i.e. make it look like a parser)
 --]]
-function _paramGen (fmt)
+local function _paramGen (fmt)
     if type(fmt) ~= "string" then
         error("Format must be a string. Got type: "..type(fmt),2)
     end
@@ -118,7 +121,7 @@ end
 parameters Qcc, Eta, sQcc, and sEta (numbers).  sQcc and sEta
 defualt to zero.
 --]]
-function calculate(Qcc,Eta,sQcc,sEta)
+function SG.calculate(Qcc,Eta,sQcc,sEta)
     -- set default values
     sQcc = sQcc or 0
     sEta = sEta or 0
@@ -144,7 +147,7 @@ end
 returns a table of spectra from all combinations of the items in the
 lists of numbers Qcc,Eta,sQcc,and sEta. sQcc, and sEta default to {0}
 --]]
-function calculateAll(Qcc,Eta,sQcc,sEta)
+function SG.calculateAll(Qcc,Eta,sQcc,sEta)
     -- default values
     sQcc = sQcc or {0}
     sEta = sEta or {0}
@@ -181,3 +184,5 @@ function calculateAll(Qcc,Eta,sQcc,sEta)
         save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)
     end
 end
+
+return SG
