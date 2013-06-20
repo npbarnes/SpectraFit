@@ -117,7 +117,7 @@ helpers.tabCopy = tabCopy
 -- abs(j) <= N and
 -- abs(i)+abs(j) <= N
 function helpers.intersections(n)
-    N = math.floor(n)
+    local N = math.floor(n)
     if n ~= N then
         error("n must be an integer",2)
     end

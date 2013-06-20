@@ -3,13 +3,13 @@ This is the main driver for the Powder-Fit Lua project. Main is
 intended to handle initialization, settings, and frontend UI, the rest
 can be found in other files.
 --]]
-SG = require "spectragen"
+local SG = require "spectragen"
 
 --[[
 The State table holds the current working state of the program as well
 as settings and physical parameters.
 --]]
-State = {
+local State = {
     action = "Init" -- Holds a string that describes what is being
                     -- done right now
                     -- in the event of a crash this can be used to
