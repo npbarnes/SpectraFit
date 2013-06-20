@@ -48,23 +48,18 @@ local function Spectrum(nbins,start,binsize)
         elseif i<1 or i>#spec then
             error("bin index out of range: 1 - " .. #spec)
         end
-        return spec[i]
+        return spec[i].freq, spec[i].inten
     end
 
     function obj.findBin(freq)
         if type(freq) ~= "number" then
             error("number expected. Got: ".. type(freq))
         elseif freq < min or freq >= max then
-            error("Frequency out of range: "..min.."-"..max)
+            error("Frequency out of range: ["..min..","..max..")")
         end
 
-        for i=1,n do
-            local currFreq = spec[i].freq
-            local nextFreq = currFreq + step
-            if currFreq <= freq and freq < nextFreq then
-                return i, spec[i]
-            end
-        end
+        local i = math.floor((freq-start)/step)+1
+        return i, spec[i].freq, spec[i].inten
     end
 
     function obj.getInten(freq)
@@ -94,7 +89,7 @@ local function Spectrum(nbins,start,binsize)
         if not isfreq then
             pos = obj.findBin(pos)
         end
-        spec[pos] = spec[pos] + value
+        spec[pos].inten = spec[pos].inten + value
     end
 
     -- add other to obj bin by bin
