@@ -1,9 +1,25 @@
 --[[
 This is the main driver for the Powder-Fit Lua project. Main is
-intended to handle initialization, settings, and frontend UI, the rest
-can be found in other files.
+intended to handle initialization, settings, and frontend UI.
+
+Program Organization:
+
+-Main
+    -Experiment
+        -Data
+        -Theory
+
+    -SpectraFit
+        -SpectraGen
+            -AldermanGrant
+
+        -Optimize
+            -Compass
+            -Grid
+            -Simplex
 --]]
-local SG = require "spectragen"
+local SF = require "spectrafit"
+local Exp = require "Experiment"
 
 --[[
 The State table holds the current working state of the program as well
