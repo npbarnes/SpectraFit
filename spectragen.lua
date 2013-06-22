@@ -10,7 +10,7 @@ that are passed on to _paramGen() and put into apropriate
 places in the param table (i.e. State.runParam).
 distributions are optional default value is '0' for each
 --]]
-function SG.paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
+function SG.paramGen (Qccfmt, Etafmt, sQccfmt,sEtafmt)
     -- Set distributions to a default value of 0
     sQccfmt = sQccfmt or '0'
     sEtafmt = sEtafmt or '0'
@@ -25,11 +25,14 @@ function SG.paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
         error("Etafmt is required",2)
     end
 
+    param = {}
     -- Generate tables of parameters to be simulated
     param.Qcc  = _paramGen(Qccfmt)
     param.sQcc = _paramGen(sQccfmt)
     param.Eta  = _paramGen(Etafmt)
     param.sEta = _paramGen(sEtafmt)
+
+    return param
 end
 
 --[[
