@@ -32,6 +32,15 @@ function SG.paramGen (Qccfmt, Etafmt, sQccfmt,sEtafmt)
     param.Eta  = _paramGen(Etafmt)
     param.sEta = _paramGen(sEtafmt)
 
+    param.current = {
+        Qcc = param.Qcc[1],
+        Eta = param.Eta[1],
+        sQcc = param.sQcc[1],
+        sEta = param.sEta[1],
+
+        n = 1
+    }
+
     return param
 end
 
