@@ -92,7 +92,7 @@ function helpers.arrayType(array,ty)
 end
 
 -- copy tables
-local function tabCopy(t,seen)
+function helpers.tabCopy(t,seen)
     seen = seen or {}
     if t == nil then return nil end
     if seen[t] then return seen[t] end
@@ -108,8 +108,5 @@ local function tabCopy(t,seen)
     seen[t] = nt
     return nt
 end
-helpers.tabCopy = tabCopy
-
-
 
 return helpers
