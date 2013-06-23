@@ -98,6 +98,9 @@ local function Spectrum(nbins,start,binsize)
     -- they must have identical frequencies
     function obj.add(other)
         for pos,freq,inten in bins() do
+            if freq ~= other[pos] then
+                error("frequencies do not match")
+            end
             obj.insert(select(2,other[pos]),pos)
         end
     end
