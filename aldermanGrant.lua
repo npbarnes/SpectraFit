@@ -67,6 +67,125 @@ local function intersections(n)
 end
 
 --[[
+functions for moving between nodes on the triangle graph
+triangles are represented in the form:
+{m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
+--]]
+
+-- The move function change tri
+local function moveU(tri)
+    tri.m.j = tri.m.j + 1
+    tri.l.j = tri.l.j + 1
+    tri.r.j = tri.r.j + 1
+end
+local function moveD(tri)
+    tri.m.j = tri.m.j - 1
+    tri.l.j = tri.l.j - 1
+    tri.r.j = tri.r.j - 1
+end
+
+local function moveR(tri)
+    tri.m.i = tri.m.i + 1
+    tri.l.i = tri.l.i + 1
+    tri.r.i = tri.r.i + 1
+end
+local function moveL(tri)
+    tri.m.i = tri.m.i - 1
+    tri.l.i = tri.l.i - 1
+    tri.r.i = tri.r.i - 1
+end
+
+-- The mirror functions return reflected triangles without changing tri
+-- reflect over the X axis
+local function mirrorX(tri)
+    ret = tabCopy(tri)
+    ret.l.j = -ret.l.j
+    ret.m.j = -ret.m.j
+    ret.r.j = -ret.r.j
+    return ret
+end
+
+-- reflect over the Y axis
+local function mirrorY(tri)
+    ret = tabCopy(tri)
+    ret.l.i = -ret.l.i
+    ret.m.i = -ret.m.i
+    ret.r.i = -ret.r.i
+    return ret
+end
+
+-- reflect over both X and Y in turn
+local function mirrorXY(tri)
+    -- This is a bit less efficient because it makes two copies, but
+    -- it reduces code duplication
+    return mirrorY( mirrorX(tri) )
+end
+
+--[[
+generator function for the iterator factory below (triangles).  It
+takes advantage of the 4 fold rotational symmetry of the octahedron In
+the first quadrant there are two orientations of triangles, it's
+fairly strightforward to iterate through each in turn. The rest of the
+triangles can be found by translations and reflections
+--]]
+local function triGen(N)
+    local firstTri -- The first triangle defines the orientation
+    local topTri   -- The first triangle in a row
+    local tri      -- The current triangle under consideration
+
+    -- Orientation 1
+    firstTri = {m={i=0,j=0},l={i=1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N do
+        for j=1,N-i+1 do
+            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(mirrorY(tri)) -- Second
+            coroutine.yield(mirrorXY(tri))-- Third
+            coroutine.yield(mirrorX(tri)) -- Fourth
+            moveR(tri)
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+
+    -- Orientation 2
+    firstTri = {m={i=1,j=1},l={i=1,j=0},r={i=0,j=1}}
+    topTri = tabCopy(firstTri)
+    tri = tabCopy(firstTri)
+    for i=1,N-1 do -- there are fewer triangles in this orientation
+        for j=1,N-i do
+            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(mirrorY(tri)) -- Second
+            coroutine.yield(mirrorXY(tri))-- Third
+            coroutine.yield(mirrorX(tri)) -- Fourth
+            moveR(tri)
+        end
+        moveU(topTri)
+        tri = tabCopy(topTri)
+    end
+end
+
+--[[
+an iterator factory that takes a number N, that is the Alderman-Grant
+N parameter. The iterator iterates through all of the triangles in the
+upper half of the octahedron.
+triangles are represented in the form:
+{m={i=0,j=0},l={i=0,j=1},r={i=1,j=0}}
+--]]
+local function triangles(n)
+    local N = math.floor(n)
+    if N ~= n then
+        error("N must be an integer",2)
+    end
+
+    local co = coroutine.create(function () triGen(N) end)
+    return function ()
+        local code, res = coroutine.resume(co)
+        return res
+    end
+end
+--[[
 returns the list of frequencies that can then be used to create the
 "tents" that will finally be used to create a spectrum histogram
 frequencies will be in the form of a 2-d array indexed so that
@@ -76,6 +195,7 @@ freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
+
 function AG.frequencies(N, freqFunc, intenFunc)
     local freq = {}
     freq["N"] = N
@@ -96,7 +216,7 @@ in the form:
 --]]
 function AG.tents(freqs)
     local ret = {}
-    for tri in h.triangles(freqs.N) do
+    for tri in triangles(freqs.N) do
         local freql,freqm,freqr,intenl,intenm,intenr
         freql = freqs[tri.l.i][tri.l.j].freq
         freqm = freqs[tri.m.i][tri.m.j].freq
