@@ -40,6 +40,7 @@ local function Spectrum(nbins,start,binsize)
     end
 
     -- Public Methods
+    --getbin takes an index
     function obj.getBin(i)
         if type(i) ~= "number" then
             error("bin index must be an integer. Got: "..type(i))
@@ -51,6 +52,7 @@ local function Spectrum(nbins,start,binsize)
         return spec[i].freq, spec[i].inten
     end
 
+    --findbin takes a frequency
     function obj.findBin(freq)
         if type(freq) ~= "number" then
             error("number expected. Got: ".. type(freq))
