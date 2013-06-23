@@ -110,33 +110,6 @@ local function tabCopy(t,seen)
 end
 helpers.tabCopy = tabCopy
 
--- this is a helper for aldermanGrant.lua, it gives all possible
--- indecies for the intersections on the upper half of the tetrahedron
--- that is, all integer combinations of i and j such that:
--- abs(i) <= N and
--- abs(j) <= N and
--- abs(i)+abs(j) <= N
-function helpers.intersections(n)
-    local N = math.floor(n)
-    if n ~= N then
-        error("n must be an integer",2)
-    end
-
-    local i = -N-1
-    local j = 0
-    return function ()
-        if i >= N then
-            return nil
-        elseif j < N-math.abs(i) then
-            j = j+1
-            return i,j
-        else
-            i = i+1
-            j = -(N-math.abs(i))
-            return i,j
-        end
-    end
-end
 
 --[[
 functions for moving between nodes on the triangle graph

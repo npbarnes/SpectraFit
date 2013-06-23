@@ -38,6 +38,34 @@ local cos2Phi = function (i,j,N)
     return ( i/RN(i,j,N) )/( sinTheta(i,j,N) )
 end
 
+-- this is a helper for aldermanGrant.lua, it gives all possible
+-- indecies for the intersections on the upper half of the tetrahedron
+-- that is, all integer combinations of i and j such that:
+-- abs(i) <= N and
+-- abs(j) <= N and
+-- abs(i)+abs(j) <= N
+local function intersections(n)
+    local N = math.floor(n)
+    if n ~= N then
+        error("n must be an integer",2)
+    end
+
+    local i = -N-1
+    local j = 0
+    return function ()
+        if i >= N then
+            return nil
+        elseif j < N-math.abs(i) then
+            j = j+1
+            return i,j
+        else
+            i = i+1
+            j = -(N-math.abs(i))
+            return i,j
+        end
+    end
+end
+
 --[[
 returns the list of frequencies that can then be used to create the
 "tents" that will finally be used to create a spectrum histogram
@@ -53,7 +81,7 @@ function AG.frequencies(N, freqFunc, intenFunc)
     freq["N"] = N
 
     -- 'i' and 'j' are the indecies of the points on each face
-    for i,j in h.intersections(N) do
+    for i,j in intersections(N) do
         table[i][j] = {
             freq = freqFunc(cosTheta(i,j,N), cos2Phi(i,j,N)),
             inten = intenFunc(cosTheta(i,j,N), cos2Phi(i,j,N))
