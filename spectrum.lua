@@ -1,3 +1,6 @@
+local s = require "serialize"
+local h = require "helpers"
+
 -- Helper functions
 local function newSpec(nbins, first, binsize)
     local ret = {}
@@ -118,6 +121,26 @@ local function Spectrum(nbins,start,binsize)
         min = tab.min
         max = tab.max
         step = tab.step
+    end
+
+    function obj.save(file)
+        local tab = {}
+        tab.spec = h.tabCopy(spec)
+        tab.n = n
+        tab.min = min
+        tab.max = max
+        tab.step = step
+
+        if type(file) == "string" then
+            file = io.open(file,"w")
+        end
+        file = file or io.output()
+
+        s.save("local specTab",tab,file)
+        file:write("return specTab")
+
+        file:close()
+
     end
 
     return obj
