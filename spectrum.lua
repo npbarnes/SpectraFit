@@ -115,6 +115,18 @@ local function Spectrum(nbins,start,binsize)
         return ret
     end
 
+    -- load spectrum from a file saved using obj.save()
+    function obj.load(file)
+        if type(file) ~= "string" then
+            error("file must be a string")
+        end
+
+        obj.tableLoad(dofile(file))
+
+        -- Return self
+        return obj
+    end
+
     function obj.tableLoad(tab)
         spec = tab.spec
         n = tab.n
