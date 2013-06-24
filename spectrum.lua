@@ -22,11 +22,14 @@ local function Spectrum(nbins,start,binsize)
     setmetatable(obj,meta)
 
     -- Private Fields
-    local n = nbins
-    local min = start
-    local step = binsize
-    local max = start + nbins*binsize
-    local spec = newSpec(nbins, start, binsize)
+    -- Default values are provided, but if the constructor is called
+    -- without arguments it's expected that you run obj.load() or
+    -- obj.tableLoad()
+    local n = nbins or 1
+    local min = start or 1
+    local step = binsize or 1
+    local max = min + n*step
+    local spec = newSpec(n, min, step)
 
     -- Private Methods
     -- return an iterator to go through the bins
