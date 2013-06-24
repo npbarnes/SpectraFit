@@ -33,5 +33,8 @@ function Exp.loadData(file)
         i = i+1
     end
 
+<<<<<<< HEAD
     return spec
+=======
+>>>>>>> c8a8552683f0174aacf4b86d30f57666e7c36df5
 end
