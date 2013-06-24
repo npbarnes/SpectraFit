@@ -100,7 +100,7 @@ function helpers.tabCopy(t,seen)
     local nt = {}
     for k,v in pairs(t) do
         if type(v) == "table" then
-            nt[k] = tabCopy(v,seen)
+            nt[k] = helpers.tabCopy(v,seen)
         else
             nt[k] = v
         end
