@@ -1,7 +1,9 @@
+local s = {}
+
 -- indented write
 -- prints '\t' num times and passes
 -- the rest of the parameters to io.write()
-function iwrite(num, ...)
+local function iwrite(num, ...)
     for i=1,num do
         io.write("\t")
     end
@@ -20,7 +22,7 @@ Note 2: Cycles will result in an infinite loop
 Note 3: Haveing tables as keys will result in an error
 it is the programmers responsibility to be aware of these things
 --]]
-function serialize (item,indent)
+function s.serialize (item,indent)
     indent = indent or 0
 
     if type(item) == "number" then
@@ -37,9 +39,9 @@ function serialize (item,indent)
                 error("Cannot serialize tables indexed by tables")
             end
             iwrite(indent, "\t[")
-            serialize(k)
+            s.serialize(k)
             io.write("] = ")
-            serialize(v,indent+1)
+            s.serialize(v,indent+1)
             io.write(",\n")
         end
         iwrite(indent,"}")
@@ -54,14 +56,16 @@ at the end.
 If file is given everything will be printed to file instead of stdout
 name should be a valid lua identifier, but it doesn't have to be
 --]]
-function save (name, item, file)
+function s.save (name, item, file)
     local currFile = io.output()
     -- if file is nil then this line does nothing
     io.output(file)
 
     io.write(name, " = ")
-    serialize(item)
+    s.serialize(item)
     io.write("\n")
 
     io.output(currFile)
 end
+
+return s
