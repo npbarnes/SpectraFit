@@ -6,6 +6,7 @@ function Exp.loadData(file)
     local oldfile = io.input()
     io.input(file)
     local datastring = io.read("*all")
+    io.input(oldfile)
 
     local minFreq = math.huge
     local maxFreq = -math.huge
