@@ -112,6 +112,14 @@ local function Spectrum(nbins,start,binsize)
         return ret
     end
 
+    function obj.tableLoad(tab)
+        spec = tab.spec
+        n = tab.n
+        min = tab.min
+        max = tab.max
+        step = tab.step
+    end
+
     return obj
 end
 
