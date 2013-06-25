@@ -151,8 +151,8 @@ local function Spectrum(nbins,start,binsize)
         end
         file = file or io.output()
 
-        s.save("local specTab",tab,file)
-        file:write("return specTab")
+        file:write("return ")
+        s.serialize(tab,file)
 
         file:close()
 
