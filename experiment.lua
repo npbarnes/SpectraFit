@@ -7,10 +7,13 @@ local Spectrum = require "spectrum"
 -- inserting values by their position, rather than frequency, and
 -- calculating the appropriate frequencies.
 function Exp.loadData(file)
-    local oldfile = io.input()
-    io.input(file)
-    local datastring = io.read("*all")
-    io.input(oldfile)
+    -- If it's a string, then open the file with that name
+    -- otherwise it should be an open file handle
+    if type(file) == "string" then
+        file = assert(io.open(file))
+    end
+
+    local datastring = file:read("*a")
 
     local minFreq = math.huge
     local maxFreq = -math.huge
