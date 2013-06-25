@@ -146,10 +146,12 @@ local function Spectrum(nbins,start,binsize)
         tab.max = max
         tab.step = step
 
+        file = file or io.output()
         if type(file) == "string" then
             file = assert(io.open(file,"w"))
+        elseif io.type(file) ~= "file" then
+            error("Argument must be an open file handle or filename")
         end
-        file = file or io.output()
 
         file:write("return ")
         s.serialize(tab,file)
