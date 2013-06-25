@@ -11,6 +11,8 @@ function Exp.loadData(file)
     -- otherwise it should be an open file handle
     if type(file) == "string" then
         file = assert(io.open(file))
+    elseif io.type(file) ~= "file" then
+        error("Argument must be an open file handle or filename")
     end
 
     local datastring = file:read("*a")
