@@ -120,11 +120,16 @@ local function Spectrum(nbins,start,binsize)
 
     -- load spectrum from a file saved using obj.save()
     function obj.load(file)
-        if type(file) ~= "string" then
-            error("file must be a string")
+        file = file or io.input()
+        if type(file) == "string" then
+            file = assert(io.open(file,'r'))
+        elseif io.type(file) ~= "file" then
+            error("Argument must be an open file handle or filename")
         end
 
-        obj.tableLoad(dofile(file))
+        local datastring = file:read("*a")
+
+        obj.tableLoad(load(datastring)())
 
         -- Return self
         return obj
