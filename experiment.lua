@@ -2,6 +2,10 @@ local Exp = {}
 
 local Spectrum = require "spectrum"
 
+-- Due to round-off errors the frequencies in the datafiles do not
+-- have a consistant binsize. I'm attempting to correct this by
+-- inserting values by their position, rather than frequency, and
+-- calculating the appropriate frequencies.
 function Exp.loadData(file)
     local oldfile = io.input()
     io.input(file)
@@ -24,9 +28,6 @@ function Exp.loadData(file)
         bincount = bincount + 1
     end
 
-    -- Due to round-off errors the frequencies in the datafiles do not
-    -- have a consistant binsize. I'm attempting to correct this by
-    -- inserting values by their position, rather than frequency
     spec = Spectrum(bincount,minFreq,(maxFreq-minFreq)/bincount)
     local i = 1
     for freq, inten in datastring:gmatch("(%S+)%s+(%S+)\n") do
