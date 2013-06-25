@@ -147,7 +147,7 @@ local function Spectrum(nbins,start,binsize)
         tab.step = step
 
         if type(file) == "string" then
-            file = io.open(file,"w")
+            file = assert(io.open(file,"w"))
         end
         file = file or io.output()
 
