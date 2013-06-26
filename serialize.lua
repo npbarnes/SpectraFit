@@ -25,7 +25,7 @@ it is the programmers responsibility to be aware of these things
 --]]
 function s.serialize (item,file,indent)
     if type(file) == "string" then
-        file = assert(io.open(file))
+        file = assert(io.open(file,"w"))
     end
     file = file or io.output()
     indent = indent or 0
@@ -63,7 +63,7 @@ name should be a valid lua identifier, but it doesn't have to be
 --]]
 function s.save (name, item, file)
     if type(file) == "string" then
-        file = assert(io.open(file))
+        file = assert(io.open(file,"w"))
     end
     file = file or io.output()
 
