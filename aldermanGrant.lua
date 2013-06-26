@@ -181,7 +181,7 @@ local function triangles(n)
 
     local co = coroutine.create(function () triGen(N) end)
     return function ()
-        local code, res = coroutine.resume(co)
+        local code, res = assert(coroutine.resume(co))
         return res
     end
 end
