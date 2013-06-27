@@ -2,6 +2,7 @@ local SG = {}
 
 local h = require "helpers"
 local AG = require "aldermanGrant"
+local Exp = require "experiment"
 local Spectrum = require "spectrum"
 
 --[[
@@ -129,68 +130,38 @@ local function _paramGen (fmt)
 end
 
 --[[
-    Returns a spectrum representing the result of the simulation using
-parameters Qcc, Eta, sQcc, and sEta (numbers).  sQcc and sEta
-defualt to zero.
+aldermanSettings is a table in the form:
+{N = ##, freqFunc = func, intenFunc = func}
+spectrumSettings is a table in the form:
+{nbins = ##, start = ##, binsize = ##}
+
+Returns a spectrum representing the result of the simulation using
+parameters ... (numbers).
 --]]
-function SG.calculate(Qcc,Eta,sQcc,sEta)
-    -- set default values
-    sQcc = sQcc or 0
-    sEta = sEta or 0
-
-    -- type checking
-    if type(Qcc) ~= "number" then
-        error("Qcc must be a number",2)
-    end
-    if type(Eta) ~= "number" then
-        error("Eta must be a number",2)
-    end
-    if type(sQcc) ~= "number" then
-        error("sQcc must be a number",2)
-    end
-    if type(sEta) ~= "number" then
-        error("sEta must be a number",2)
+function SG.calculate(aldermanSettings,spectrumSettings,...)
+    for i,v in pairs(table.pack(...)) do
+        if type(v) ~= "number" then
+            error("Parameter "..i.." is not a number")
+        end
     end
 
-    --TODO: finish this function
+    return AG.getSpectrum(aldermanSettings, spectrumSettings)
 end
 
 --[[
-returns a table of spectra from all combinations of the items in the
-lists of numbers Qcc,Eta,sQcc,and sEta. sQcc, and sEta default to {0}
+returns a table of spectra from all combinations of the given
+parameter lists.
 --]]
-function SG.calculateAll(Qcc,Eta,sQcc,sEta)
-    -- default values
-    sQcc = sQcc or {0}
-    sEta = sEta or {0}
-
+function SG.calculateAll(...)
+    local lists = table.pack(...)
     --type checking
-    if type(Qcc) ~= "table" then
-        error("Qcc must be a table",2)
+    for i,v in pairs(lists) do
+        if type(v) ~= "table" then
+            error("Parameter "..i.." is not a table")
+        elseif not h.arrayType(v, "number") then
+            error("Parameter "..i.." is not a table of numbers")
+        end
     end
-    if type(Eta) ~= "table" then
-        error("Eta must be a table",2)
-    end
-    if type(sQcc) ~= "table" then
-        error("sQcc must be a table",2)
-    end
-    if type(sEta) ~= "table" then
-        error("sEta must be a table",2)
-    end
-
-    if h.arrayType(Qcc, "number") then
-        error("All values in Qcc (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(Eta, "number") then
-        error("All values in Eta (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(sQcc,"number") then
-        error("All values in sQcc (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(sEta, "number") then
-        error("All values in sEta (treated as an array) must be numbers",2)
-    end
-
 
     for Q,E,sQ,sE in h.combinations(Qcc,Eta,sQcc,sEta) do
         save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)

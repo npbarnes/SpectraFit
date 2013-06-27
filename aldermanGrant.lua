@@ -8,6 +8,9 @@ the interpolation works by aproximating a sphere as an octahedron
 positions on each face of that sphere are given by two numbers i, and j
 where i = x/N and j = y/N and z can be determined by the equation
 x+y+z = 1
+
+aldermanSettings is a table in the form:
+{N = ##, freqFunc = func, intenFunc = func}
 --]]
 local AG = {}
 
@@ -196,7 +199,11 @@ This function should be called once for each line in the single
 crystal spectrum.
 --]]
 
-function AG.frequencies(N, freqFunc, intenFunc)
+function AG.frequencies(aldermanSettings)
+    local N = aldermanSettings.N
+    local freqFunc = aldermanSettings.freqFunc
+    local intenFunc = aldermanSettings.intenFunc
+
     local freq = {}
     freq["N"] = N
 
@@ -243,7 +250,11 @@ end
 Returns a spectrum with nbins, with frequencies starting at start and
 a binsize of binsize
 --]]
-function AG.histogram(tents, nbins, start, binsize)
+function AG.histogram(tents, spectrumSettings)
+    local nbins = spectrumSettings.nbins
+    local start = spectrumSettings.start
+    local binsize = spectrumSettings.binsize
+
     local ret = Spectrum(nbins,start,binsize)
 
     for _, tent in ipairs(tents) do
@@ -315,8 +326,8 @@ function AG.histogram(tents, nbins, start, binsize)
     end
 end
 
-function AG.getSpectrum(N, freqFunc, intenFunc, nbins, start, binsize)
-    return AG.histogram(AG.tents(AG.frequencies(N, freqFunc, intenFunc)), nbins, start, binsize)
+function AG.getSpectrum(aldermanSettings, spectrumSettings)
+    return AG.histogram(AG.tents(AG.frequencies(aldermanSettings)), spectrumSettings)
 end
 
 return AG

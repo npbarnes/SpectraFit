@@ -1,11 +1,19 @@
+--[[
+spectrumSettings is a table in the form:
+{nbins = ##, start = ##, binsize = ##}
+--]]
 local s = require "serialize"
 local h = require "helpers"
 
 -- Helper functions
-local function newSpec(nbins, first, binsize)
+local function newSpec(spectrumSettings)
+    local nbins = spectrumSettings.nbins
+    local start = spectrumSettings.start
+    local binsize = spectrumSettings.binsize
+
     local ret = {}
     for i=1,nbins do
-        table.insert(ret,{freq = first+(i-1)*binsize, inten = 0})
+        table.insert(ret,{freq = start+(i-1)*binsize, inten = 0})
     end
     return ret
 end
@@ -17,7 +25,7 @@ local meta = {
     end
 }
 
-local function Spectrum(nbins,start,binsize)
+local function Spectrum(spectrumSettings)
     local obj = {}
     setmetatable(obj,meta)
 
@@ -25,11 +33,11 @@ local function Spectrum(nbins,start,binsize)
     -- Default values are provided, but if the constructor is called
     -- without arguments it's expected that you run obj.load() or
     -- obj.tableLoad()
-    local n = nbins or 1
-    local min = start or 1
-    local step = binsize or 1
+    local n = spectrumSettings.nbins or 1
+    local min = spectrumSettings.start or 1
+    local step = spectrumSettings.binsize or 1
     local max = min + n*step
-    local spec = newSpec(n, min, step)
+    local spec = newSpec(spectrumSettings)
 
     -- Private Methods
     -- return an iterator to go through the bins
