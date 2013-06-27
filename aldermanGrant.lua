@@ -315,4 +315,8 @@ function AG.histogram(tents, nbins, start, binsize)
     end
 end
 
+function AG.getSpectrum(N, freqFunc, intenFunc, nbins, start, binsize)
+    return AG.histogram(AG.tents(AG.frequencies(N, freqFunc, intenFunc)), nbins, start, binsize)
+end
+
 return AG
