@@ -1,6 +1,11 @@
-local Exp = {}
-
 local Spectrum = require "spectrum"
+
+local Exp = {
+    larmor = 32.239, -- MHz
+    spin = 3,
+    bins = 1024, -- Number of bins in the simulated spectrum
+                 -- Should match the experiment
+}
 
 -- Due to round-off errors the frequencies in the datafiles do not
 -- have a consistant binsize. I'm attempting to correct this by
@@ -39,6 +44,8 @@ function Exp.loadData(file)
         spec.insert(inten,i)
         i = i+1
     end
+
+    Exp.bins = bincount
 
     return spec
 end
