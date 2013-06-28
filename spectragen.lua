@@ -150,8 +150,9 @@ end
 returns a table of spectra from all combinations of the given
 parameter lists.
 --]]
-function SG.calculateAll(...)
+function SG.calculateAll(aldermanSettings, spectrumSettings,...)
     local lists = table.pack(...)
+    local ret = {}
     --type checking
     for i,v in pairs(lists) do
         if type(v) ~= "table" then
@@ -161,8 +162,13 @@ function SG.calculateAll(...)
         end
     end
 
-    for Q,E,sQ,sE in h.combinations(Qcc,Eta,sQcc,sEta) do
-        save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)
+    -- I had to unroll a for loop into a while to handle an arbitrary
+    -- number of parameters
+    iterator = h.combinations(...)
+    items = table.pack(iterator())
+    while items do
+        table.insert(ret,SG.calculate(aldermanSettings,spectrumSettings,table.unpack(items)))
+        items = table.pack(iterator())
     end
 end
 
