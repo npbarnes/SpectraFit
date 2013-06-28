@@ -130,13 +130,11 @@ local function _paramGen (fmt)
 end
 
 --[[
-aldermanSettings is a table in the form:
-{N = ##, freqFunc = func, intenFunc = func}
-spectrumSettings is a table in the form:
-{nbins = ##, start = ##, binsize = ##}
-
 Returns a spectrum representing the result of the simulation using
 parameters ... (numbers).
+
+It expects an even number of those parameters first the central values
+then the distributions in the same order.
 --]]
 function SG.calculate(aldermanSettings,spectrumSettings,...)
     for i,v in pairs(table.pack(...)) do
