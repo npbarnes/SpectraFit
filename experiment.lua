@@ -49,3 +49,5 @@ function Exp.loadData(file)
 
     return spec
 end
+
+return Exp
