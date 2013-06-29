@@ -3,14 +3,23 @@ local Spectrum = require "spectrum"
 local Exp = {
     larmor = 32.239, -- MHz
     spin = 3,
-    bins = 1024, -- Number of bins in the simulated spectrum
-                 -- Should match the experiment
 }
+
+local mt = {
+    __index = function(t,s)
+        if s == "bins" then
+            error("Number of bins not set, it must match the number of Experimental data points.")
+        end
+    end
+}
+
+setmetatable(Exp,mt)
 
 -- Due to round-off errors the frequencies in the datafiles do not
 -- have a consistant binsize. I'm attempting to correct this by
 -- inserting values by their position, rather than frequency, and
 -- calculating the appropriate frequencies.
+-- This function also sets Exp.bins that should be used when fitting
 function Exp.loadData(file)
     -- If it's a string, then open the file with that name
     -- otherwise it should be an open file handle
@@ -45,6 +54,8 @@ function Exp.loadData(file)
         i = i+1
     end
 
+    -- The number of bins in the simulated spectrum should match the
+    -- experiment. So export as bins.
     Exp.bins = bincount
 
     return spec
