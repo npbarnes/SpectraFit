@@ -61,4 +61,66 @@ function Exp.loadData(file)
     return spec
 end
 
+local function Vq(Qcc)
+    return (3*Qcc)/(2*Exp.spin*(2*Exp.spin-1))
+end
+
+local function Beta(Qcc)
+    return Vq(Qcc)/Exp.larmor
+end
+
+local function A_(m)
+    return 0.5*((Exp.spin+1.5)*(Exp.spin-0.5) - 3*((m-0.5)^2))
+end
+
+local function B_(m)
+    return 4*((Exp.spin+1.5)*(Exp.spin-0.5) - 6*((m-0.5)^2))
+end
+
+local function C_(m)
+    return 12*Exp.spin*(Exp.spin+1)-40*m*(m-1)-27
+end
+
+local function D_(m)
+    return 0.5*(3*Exp.spin*(Exp.spin+1)-5*m*(m-1)-6)
+end
+
+local function E_(m)
+    return 8*Exp.spin*(Exp.spin+1)-20*m*(m-1)-15
+end
+
+local function A(m,u,l,n)
+    return -(3*u^2-1+l*n-l*u*n)
+end
+
+local function C(m,u,l,n)
+    return (A_(m)*((u^4)*((3-n*l)^2)+2*(u^2)*(-9+2*(n^2)-((n^2)*(l^2)))+((3+n*l)^2)) +
+           (B_(m)*((u^4)*((3-n*l)^2)+(u^2)*(-9+(n^2)+(6*n*l)-(2*(n^2)*(l^2))))))
+end
+
+local function E(m,u,l,n)
+    return (C_(m)*(
+        u^6*(3-n*l)^3+
+        u^4*(-36+3*n^2+42*n*l-n^3*l-19*n^2*l^2+3*n^3*l^3)+
+        u^2*(9-4*n^2-15*n*l+2*n^3*l+11*n^2*l^2-3*n^3*l^3)+
+        (n^2-n^3*l-n^2*l^2+n^3*l^3))+
+        D_(m)*(
+        u^6*(3-n*l)^3+
+        u^4*(-63+12*n^2+33*n*l-4*n^3*l-13*n^2*l^2+3*n^3*l^3)+
+        u^2*(45-4*n^2-9*n*l+4*n^3*l+n^2*l^2-3*n^3*l^3)+
+        (-9+3*n*l+5*n^2*l^2+n^3*l^3))+
+        E_(m)*(
+        u^6*(3-n*l)^3+
+        u^4*(-54+9*n^2+36*n*l-3*n^3*l-15*n^2*l^2+3*n^3*l^3)+
+        u^2*(27-6*n^2-9*n*l+4*n^3*l+3*n^2*l^2-3*n^3*l^3)+
+        (-3*n^2-n^3*l+3*n^2*l^2+n^3*l^3)))
+end
+
+local function freqFunc(m,Qcc,Eta,cosTheta,cos2Phi)
+    return Exp.larmor +
+        (Vq(Qcc)/2)*(m-0.5)*A(m,cosTheta,cos2Phi,Eta) +
+        (Vq(Qcc)*Beta(Qcc)/72)*C(m,cosTheta,cos2Phi,Eta) +
+        (Vq(Qcc)*(Beta(Qcc)^2)/144)*E(m,cosTheta,cos2Phi,Eta)*(m-0.5)
+end
+
 return Exp
