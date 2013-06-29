@@ -1,4 +1,5 @@
 local Spectrum = require "spectrum"
+local f = require "functional"
 
 local Exp = {
     larmor = 32.239, -- MHz
@@ -121,6 +122,26 @@ local function freqFunc(m,Qcc,Eta,cosTheta,cos2Phi)
         (Vq(Qcc)/2)*(m-0.5)*A(m,cosTheta,cos2Phi,Eta) +
         (Vq(Qcc)*Beta(Qcc)/72)*C(m,cosTheta,cos2Phi,Eta) +
         (Vq(Qcc)*(Beta(Qcc)^2)/144)*E(m,cosTheta,cos2Phi,Eta)*(m-0.5)
+end
+
+function Exp.specLine(Qcc,Eta)
+    if type(Qcc) ~= "number" then
+        error("Qcc must be a number")
+    elseif type(Eta) ~= "number" then
+        error("Eta must be a number")
+    end
+
+    local co = coroutine.create(function ()
+        -- m is the transition from m to m-1
+        for m=-Exp.spin+1,Exp.spin do
+           coroutine.yield(f.close(freqFunc,m,Qcc,Eta))
+        end
+    end)
+
+    return function ()
+        local code,ret = assert(coroutine.resume(co))
+        return ret
+    end
 end
 
 return Exp
