@@ -280,7 +280,7 @@ function AG.histogram(tents, spectrumSettings)
     local start = spectrumSettings.start
     local binsize = spectrumSettings.binsize
 
-    local ret = Spectrum(nbins,start,binsize)
+    local ret = Spectrum(spectrumSettings)
 
     for _, tent in ipairs(tents) do
         local maxBin, fmax = ret.findBin(tent.high)
