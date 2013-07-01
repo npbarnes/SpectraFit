@@ -124,6 +124,10 @@ local function freqFunc(m,Qcc,Eta,cosTheta,cos2Phi)
         (Vq(Qcc)*(Beta(Qcc)^2)/144)*E(m,cosTheta,cos2Phi,Eta)*(m-0.5)
 end
 
+local function intenFunc(m)
+    return Exp.spin*(Exp.spin+1) - (m-1)*m
+end
+
 function Exp.specLine(Qcc,Eta)
     if type(Qcc) ~= "number" then
         error("Qcc must be a number")
