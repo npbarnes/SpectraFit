@@ -349,6 +349,8 @@ function AG.histogram(tents, spectrumSettings)
             end
         end
     end
+
+    return ret
 end
 
 function AG.getSpectrum(aldermanSettings, spectrumSettings)
