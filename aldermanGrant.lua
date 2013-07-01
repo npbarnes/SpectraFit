@@ -261,12 +261,10 @@ function AG.tents(freqs)
         table.insert(ret,{
             high=math.max(freql,freqm,freqr),
             low=math.min(freql,freqm,freqr),
-            -- find mid my sorting the three, then choosing the
-            -- middle one
-            mid = table.sort({freql,freqm,freqr})[2],
-            weight = intenl/math.pow(R(tri.l.i,tri.l.j),3) +
-                     intenm/math.pow(R(tri.m.i,tri.m.j),3) +
-                     intenr/math.pow(R(tri.r.i,tri.r.j),3)
+            mid = findMid({freql,freqm,freqr}),
+            weight = intenl/math.pow(R(tri.l.i,tri.l.j,freqs.N),3) +
+                     intenm/math.pow(R(tri.m.i,tri.m.j,freqs.N),3) +
+                     intenr/math.pow(R(tri.r.i,tri.r.j,freqs.N),3)
         })
     end
 
