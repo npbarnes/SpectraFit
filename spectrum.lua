@@ -103,7 +103,7 @@ local function Spectrum(spectrumSettings)
     -- isfreq is a boolean for choosing if pos should be interpreted
     -- as a bin number or a frequency
     function obj.insert(value, pos, isfreq)
-        if not isfreq then
+        if isfreq then
             pos = obj.findBin(pos)
         end
         spec[pos].inten = spec[pos].inten + value
