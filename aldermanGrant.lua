@@ -37,8 +37,24 @@ local sinTheta = function (i,j,N)
 end
 
 -- returns cos^2 of the azimuthal angle phi given i, and j
-local cos2Phi = function (i,j,N)
+local cosPhi = function (i,j,N)
+    -- If sinTheta is zero than Phi can be anything
+    if sinTheta(i,j,N) == 0 then
+        return 0
+    end
     return ( i/RN(i,j,N) )/( sinTheta(i,j,N) )
+end
+
+local sinPhi = function(i,j,N)
+    -- If sinTheta is zero than Phi can be anything
+    if sinTheta(i,j,N) == 0 then
+        return 0
+    end
+    return ( j/RN(i,j,N) )/( sinTheta(i,j,N) )
+end
+
+local cos2Phi = function (i,j,N)
+    return math.pow(cosPhi(i,j,N),2)-math.pow(sinPhi(i,j,N),2)
 end
 
 -- this is a helper for aldermanGrant.lua, it gives all possible
