@@ -33,6 +33,7 @@ local function Spectrum(spectrumSettings)
     -- Default values are provided, but if the constructor is called
     -- without arguments it's expected that you run obj.load() or
     -- obj.tableLoad()
+    -- TODO: send defaults to newSpec if needed
     local n = spectrumSettings.nbins or 1
     local min = spectrumSettings.start or 1
     local step = spectrumSettings.binsize or 1
