@@ -72,7 +72,7 @@ local function Spectrum(spectrumSettings)
         if type(freq) ~= "number" then
             error("number expected. Got: "..type(freq))
         elseif freq < min or freq >= max then
-            error("Frequency out of range: ["..min..","..max..")")
+            error("Frequency "..freq.." out of range: ["..min..","..max..")")
         end
 
         local i = math.floor((freq-start)/step)+1
