@@ -128,7 +128,7 @@ local function intenFunc(m)
     return Exp.spin*(Exp.spin+1) - (m-1)*m
 end
 
-function Exp.specLine(Qcc,Eta)
+function Exp.specLines(Qcc,Eta)
     if type(Qcc) ~= "number" then
         error("Qcc must be a number")
     elseif type(Eta) ~= "number" then
