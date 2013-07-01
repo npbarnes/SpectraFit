@@ -75,7 +75,7 @@ local function Spectrum(spectrumSettings)
             error("Frequency "..freq.." out of range: ["..min..","..max..")")
         end
 
-        local i = math.floor((freq-start)/step)+1
+        local i = math.floor((freq-min)/step)+1
         return i, spec[i].freq, spec[i].inten
     end
 
