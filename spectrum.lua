@@ -70,7 +70,7 @@ local function Spectrum(spectrumSettings)
     --findbin takes a frequency
     function obj.findBin(freq)
         if type(freq) ~= "number" then
-            error("number expected. Got: ".. type(freq))
+            error("number expected. Got: "..type(freq))
         elseif freq < min or freq >= max then
             error("Frequency out of range: ["..min..","..max..")")
         end
