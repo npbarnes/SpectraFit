@@ -225,6 +225,7 @@ function AG.frequencies(aldermanSettings)
 
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in intersections(N) do
+        freq[i] = freq[i] or {}
         freq[i][j] = {
             freq = freqFunc(cosTheta(i,j,N), cos2Phi(i,j,N)),
             inten = intenFunc(cosTheta(i,j,N), cos2Phi(i,j,N))
