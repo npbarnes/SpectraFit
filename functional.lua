@@ -1,4 +1,4 @@
-local f = {}
+local functional = {}
 
 local function close1(f,v)
     assert(type(f) == "function", "f must be a function")
