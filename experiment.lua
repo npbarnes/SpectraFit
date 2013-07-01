@@ -138,13 +138,13 @@ function Exp.specLines(Qcc,Eta)
     local co = coroutine.create(function ()
         -- m is the transition from m to m-1
         for m=-Exp.spin+1,Exp.spin do
-           coroutine.yield(f.close(freqFunc,m,Qcc,Eta))
+           coroutine.yield(f.close(freqFunc,m,Qcc,Eta),f.close(intenFunc,m))
         end
     end)
 
     return function ()
-        local code,ret = assert(coroutine.resume(co))
-        return ret
+        local code,ffunc,ifunc = assert(coroutine.resume(co))
+        return ffunc,ifunc
     end
 end
 
