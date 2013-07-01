@@ -136,14 +136,36 @@ parameters ... (numbers).
 It expects an even number of those parameters first the central values
 then the distributions in the same order.
 --]]
-function SG.calculate(aldermanSettings,spectrumSettings,...)
+function SG.calculate(spectrumSettings,...)
+    local numParam = select('#',...)
+    -- Parameter checking
+    if numParam%2 ~= 0 then
+        error("There must be an even number of parameters (central values followed by distributions.")
+    end
+
+    -- Type checking
     for i,v in pairs(table.pack(...)) do
         if type(v) ~= "number" then
             error("Parameter "..i.." is not a number")
         end
     end
 
-    return AG.getSpectrum(aldermanSettings, spectrumSettings)
+    local ret = Spectrum(spectrumSettings)
+    local aldermanSettings = {
+        N = settings.AldermanGrantN,
+        freqFunc = error,
+        intenFunc = error,
+    }
+
+    -- TODO: make this work for more than two parameters
+    -- TODO: Include distributed parameters
+    for ffunc,ifunc in Exp.specLines(select(1,...),select(2,...)) do
+        aldermanSettings.freqFunc = ffunc
+        aldermanSettings.intenFunc = ifunc
+        ret.add(AG.getSpectrum(aldermanSettings, spectrumSettings))
+    end
+
+    return ret
 end
 
 --[[
