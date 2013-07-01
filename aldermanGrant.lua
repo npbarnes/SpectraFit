@@ -225,11 +225,21 @@ function AG.frequencies(aldermanSettings)
 
     -- 'i' and 'j' are the indecies of the points on each face
     for i,j in intersections(N) do
-        table[i][j] = {
+        freq[i][j] = {
             freq = freqFunc(cosTheta(i,j,N), cos2Phi(i,j,N)),
             inten = intenFunc(cosTheta(i,j,N), cos2Phi(i,j,N))
         }
     end
+
+    return freq
+end
+
+-- find mid my sorting the three, then choosing the
+-- middle one
+local function findMid(tab)
+    table.sort(tab)
+    mid=math.floor((#tab/2))+1
+    return tab[mid]
 end
 
 --[[
