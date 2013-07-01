@@ -101,7 +101,7 @@ end
 -- The mirror functions return reflected triangles without changing tri
 -- reflect over the X axis
 local function mirrorX(tri)
-    ret = tabCopy(tri)
+    ret = h.tabCopy(tri)
     ret.l.j = -ret.l.j
     ret.m.j = -ret.m.j
     ret.r.j = -ret.r.j
@@ -110,7 +110,7 @@ end
 
 -- reflect over the Y axis
 local function mirrorY(tri)
-    ret = tabCopy(tri)
+    ret = h.tabCopy(tri)
     ret.l.i = -ret.l.i
     ret.m.i = -ret.m.i
     ret.r.i = -ret.r.i
@@ -138,34 +138,34 @@ local function triGen(N)
 
     -- Orientation 1
     firstTri = {m={i=0,j=0},l={i=1,j=0},r={i=0,j=1}}
-    topTri = tabCopy(firstTri)
-    tri = tabCopy(firstTri)
+    topTri = h.tabCopy(firstTri)
+    tri = h.tabCopy(firstTri)
     for i=1,N do
         for j=1,N-i+1 do
-            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(h.tabCopy(tri)) -- First quadrant
             coroutine.yield(mirrorY(tri)) -- Second
             coroutine.yield(mirrorXY(tri))-- Third
             coroutine.yield(mirrorX(tri)) -- Fourth
             moveR(tri)
         end
         moveU(topTri)
-        tri = tabCopy(topTri)
+        tri = h.tabCopy(topTri)
     end
 
     -- Orientation 2
     firstTri = {m={i=1,j=1},l={i=1,j=0},r={i=0,j=1}}
-    topTri = tabCopy(firstTri)
-    tri = tabCopy(firstTri)
+    topTri = h.tabCopy(firstTri)
+    tri = h.tabCopy(firstTri)
     for i=1,N-1 do -- there are fewer triangles in this orientation
         for j=1,N-i do
-            coroutine.yield(tabCopy(tri)) -- First quadrant
+            coroutine.yield(h.tabCopy(tri)) -- First quadrant
             coroutine.yield(mirrorY(tri)) -- Second
             coroutine.yield(mirrorXY(tri))-- Third
             coroutine.yield(mirrorX(tri)) -- Fourth
             moveR(tri)
         end
         moveU(topTri)
-        tri = tabCopy(topTri)
+        tri = h.tabCopy(topTri)
     end
 end
 
