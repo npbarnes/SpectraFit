@@ -10,6 +10,8 @@ local mt = {
     __index = function(t,s)
         if s == "bins" then
             error("Number of bins not set, it must match the number of Experimental data points.")
+        else
+            error("Attempt to index field "..s.." (a nil value)")
         end
     end
 }
