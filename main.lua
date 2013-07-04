@@ -1,16 +1,31 @@
 --[[
-This is the main driver for the SpectraFit Lua project it will use
-dofile so that State is in scope for other operations get bring State
-into scope.  main is intended to handle initialization, settings, and
-frontend UI, the rest can be found in other files.
+This is the main driver for the Powder-Fit Lua project. Main is
+intended to handle initialization, settings, and frontend UI.
+
+Program Organization:
+
+-Main
+    -Experiment
+        -Data
+        -Theory
+
+    -SpectraFit
+        -SpectraGen
+            -AldermanGrant
+
+        -Optimize
+            -Compass
+            -Grid
+            -Simplex
 --]]
+local SF = require "spectrafit"
+local Exp = require "Experiment"
 
 --[[
 The State table holds the current working state of the program as well
-as settings and physical parameters. it will be referenced in the
-other source files.
+as settings and physical parameters.
 --]]
-State = {
+local State = {
     action = "Init" -- Holds a string that describes what is being
                     -- done right now
                     -- in the event of a crash this can be used to
@@ -57,4 +72,3 @@ State.ioSettings = {
                                 -- take a snapshot
 }
 
-require "spectragen"

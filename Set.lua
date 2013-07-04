@@ -12,7 +12,7 @@ function Set:add (elem)
 end
 
 -- prints the set as a comma separated list of set elements
--- TODO: currently prints function names as well, fix this.
+-- TODO: currently prints function names as well (write,add,addAll)
 function Set:write()
     io.write("{")
     for index,value in pairs(self) do

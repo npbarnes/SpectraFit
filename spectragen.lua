@@ -1,5 +1,10 @@
-h = require "helpers"
-AG = require "aldermanGrant"
+local SG = {}
+
+local h = require "helpers"
+local AG = require "aldermanGrant"
+local Exp = require "experiment"
+local Spectrum = require "spectrum"
+local settings = require "settings"
 
 --[[
     The arguments to this function are all string literals
@@ -7,7 +12,7 @@ that are passed on to _paramGen() and put into apropriate
 places in the param table (i.e. State.runParam).
 distributions are optional default value is '0' for each
 --]]
-function paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
+function SG.paramGen (Qccfmt, Etafmt, sQccfmt,sEtafmt)
     -- Set distributions to a default value of 0
     sQccfmt = sQccfmt or '0'
     sEtafmt = sEtafmt or '0'
@@ -22,11 +27,23 @@ function paramGen (param, Qccfmt, Etafmt, sQccfmt,sEtafmt)
         error("Etafmt is required",2)
     end
 
+    param = {}
     -- Generate tables of parameters to be simulated
     param.Qcc  = _paramGen(Qccfmt)
     param.sQcc = _paramGen(sQccfmt)
     param.Eta  = _paramGen(Etafmt)
     param.sEta = _paramGen(sEtafmt)
+
+    param.current = {
+        Qcc = param.Qcc[1],
+        Eta = param.Eta[1],
+        sQcc = param.sQcc[1],
+        sEta = param.sEta[1],
+
+        n = 1
+    }
+
+    return param
 end
 
 --[[
@@ -43,7 +60,7 @@ end
         Give a more useful error message for a malformed format
         (i.e. make it look like a parser)
 --]]
-function _paramGen (fmt)
+local function _paramGen (fmt)
     if type(fmt) ~= "string" then
         error("Format must be a string. Got type: "..type(fmt),2)
     end
@@ -113,71 +130,79 @@ function _paramGen (fmt)
     return ret
 end
 
+SG.calculate = {}
 --[[
-    Returns a spectrum representing the result of the simulation using
-parameters Qcc, Eta, sQcc, and sEta (numbers).  sQcc and sEta
-defualt to zero.
+Returns a spectrum representing the result of the simulation using
+parameters ... (numbers).
 --]]
-function calculate(Qcc,Eta,sQcc,sEta)
-    -- set default values
-    sQcc = sQcc or 0
-    sEta = sEta or 0
+function SG.calculate.single(spectrumSettings,...)
+    local numParam = select('#',...)
 
-    -- type checking
-    if type(Qcc) ~= "number" then
-        error("Qcc must be a number",2)
-    end
-    if type(Eta) ~= "number" then
-        error("Eta must be a number",2)
-    end
-    if type(sQcc) ~= "number" then
-        error("sQcc must be a number",2)
-    end
-    if type(sEta) ~= "number" then
-        error("sEta must be a number",2)
+    -- Type checking
+    for i,v in pairs(table.pack(...)) do
+        if type(v) ~= "number" then
+            error("Parameter "..i.." is not a number")
+        end
     end
 
-    --TODO: finish this function
+    local ret = Spectrum(spectrumSettings)
+    local aldermanSettings = {
+        N = settings.AldermanGrantN,
+        freqFunc = error,
+        intenFunc = error,
+    }
+
+    for ffunc,ifunc in Exp.specLines(...) do
+        aldermanSettings.freqFunc = ffunc
+        aldermanSettings.intenFunc = ifunc
+        ret.add(AG.getSpectrum(aldermanSettings, spectrumSettings))
+    end
+
+    return ret
 end
 
 --[[
-returns a table of spectra from all combinations of the items in the
-lists of numbers Qcc,Eta,sQcc,and sEta. sQcc, and sEta default to {0}
---]]
-function calculateAll(Qcc,Eta,sQcc,sEta)
-    -- default values
-    sQcc = sQcc or {0}
-    sEta = sEta or {0}
+Returns a spectrum representing the result of the simulation using
+parameters ... (numbers).
 
+It expects an even number of those parameters first the central values
+then the distributions in the same order.
+--]]
+function SG.calculate.distributed(spectrumSettings,...)
+    -- Parameter checking
+    if numParam%2 ~= 0 then
+        error("There must be an even number of parameters (central values followed by distributions.")
+    end
+
+    error("Distributed simulation is not yet implemented.")
+end
+
+--[[
+returns a table of spectra from all combinations of the given
+parameter lists.
+--]]
+function SG.calculate.all(aldermanSettings, spectrumSettings,...)
+    local lists = table.pack(...)
+    local ret = {}
     --type checking
-    if type(Qcc) ~= "table" then
-        error("Qcc must be a table",2)
-    end
-    if type(Eta) ~= "table" then
-        error("Eta must be a table",2)
-    end
-    if type(sQcc) ~= "table" then
-        error("sQcc must be a table",2)
-    end
-    if type(sEta) ~= "table" then
-        error("sEta must be a table",2)
+    for i,v in pairs(lists) do
+        if type(v) ~= "table" then
+            error("Parameter "..i.." is not a table")
+        elseif not h.arrayType(v, "number") then
+            error("Parameter "..i.." is not a table of numbers")
+        end
     end
 
-    if h.arrayType(Qcc, "number") then
-        error("All values in Qcc (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(Eta, "number") then
-        error("All values in Eta (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(sQcc,"number") then
-        error("All values in sQcc (treated as an array) must be numbers",2)
-    end
-    if h.arrayType(sEta, "number") then
-        error("All values in sEta (treated as an array) must be numbers",2)
-    end
-
-
-    for Q,E,sQ,sE in h.combinations(Qcc,Eta,sQcc,sEta) do
-        save(Q.."_"..E.."_"..sQ.."_"..sE..".txt",calculate(Q,E,sQ,sE),State.ioSettings.filename)
+    -- I had to unroll a for loop into a while to handle an arbitrary
+    -- number of parameters
+    -- Puts return values of the iterator into a table rather than in
+    -- a list
+    iterator = h.combinations(...)
+    items = table.pack(iterator())
+    while items do
+        table.insert(ret,SG.calculate(aldermanSettings,spectrumSettings,table.unpack(items)))
+        items = table.pack(iterator())
     end
 end
+
+return SG
