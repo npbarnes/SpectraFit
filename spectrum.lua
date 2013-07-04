@@ -67,7 +67,7 @@ local function Spectrum(spectrumSettings)
         return spec[i].freq, spec[i].inten
     end
 
-    --findbin takes a frequency
+    --findbin takes a frequency returns a bin number
     function obj.findBin(freq)
         if type(freq) ~= "number" then
             error("number expected. Got: "..type(freq))
