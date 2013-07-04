@@ -50,7 +50,12 @@ function Exp.loadData(file)
         bincount = bincount + 1
     end
 
-    spec = Spectrum(bincount,minFreq,(maxFreq-minFreq)/bincount)
+
+    spec = Spectrum{
+        nbins = bincount,
+        start = minFreq,
+        binsize = (maxFreq-minFreq)/bincount
+    }
     local i = 1
     for freq, inten in datastring:gmatch("(%S+)%s+(%S+)\n") do
         spec.insert(inten,i)
