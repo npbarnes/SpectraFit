@@ -180,7 +180,7 @@ end
 returns a table of spectra from all combinations of the given
 parameter lists.
 --]]
-function SG.calculateAll(aldermanSettings, spectrumSettings,...)
+function SG.calculate.all(aldermanSettings, spectrumSettings,...)
     local lists = table.pack(...)
     local ret = {}
     --type checking
