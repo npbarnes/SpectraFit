@@ -38,7 +38,7 @@ function Exp.loadData(file)
     local maxFreq = -math.huge
     local bincount = 0
     local bins = {}
-    for freq, inten in datastring:gmatch("(%S+)%s+(%S+)\n") do
+    for freq, inten in datastring:gmatch("(%d*%.?%d*)%s+(%d*%.?%d*)\n") do
         freq = tonumber(freq)
         inten = tonumber(inten)
         if freq < minFreq then
