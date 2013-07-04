@@ -116,7 +116,10 @@ local function Spectrum(spectrumSettings)
             if freq ~= other[pos] then
                 error("frequencies do not match")
             end
-            obj.insert(select(2,other[pos]),pos)
+            -- For some reason using the index operator [] doesn't
+            -- return the intensity, calling getBin directly works as
+            -- expected.
+            obj.insert(select(2,other.getBin(pos)),pos)
         end
     end
 
