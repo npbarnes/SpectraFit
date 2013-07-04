@@ -4,6 +4,7 @@ spectrumSettings is a table in the form:
 --]]
 local s = require "serialize"
 local h = require "helpers"
+local csv = require "csv"
 
 -- Helper functions
 local function newSpec(spectrumSettings)
@@ -174,7 +175,28 @@ local function Spectrum(spectrumSettings)
         s.serialize(tab,file)
 
         file:close()
+    end
 
+    function obj.saveCSV(file)
+        file = file or io.output()
+        if type(file) == "string" then
+            file = assert(io.open(file,"w"))
+        elseif io.type(file) ~= "file" then
+            error("Argument must be an open file handle or filename")
+        end
+
+        local tab = csv{
+            {"n:",    n,     "","Frequency","Intensity"},
+            {"min:",  min},
+            {"max:",  max},
+            {"step:", step},
+        }
+        for bin,freq,inten in bins() do
+            tab.insert(freq,bin+1,4)
+            tab.insert(inten,bin+1,5)
+        end
+
+        tab.save(file)
     end
 
     return obj
