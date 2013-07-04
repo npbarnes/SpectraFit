@@ -4,6 +4,7 @@ local h = require "helpers"
 local AG = require "aldermanGrant"
 local Exp = require "experiment"
 local Spectrum = require "spectrum"
+local settings = require "settings"
 
 --[[
     The arguments to this function are all string literals
