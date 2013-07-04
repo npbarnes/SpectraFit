@@ -195,6 +195,8 @@ function SG.calculate.all(aldermanSettings, spectrumSettings,...)
 
     -- I had to unroll a for loop into a while to handle an arbitrary
     -- number of parameters
+    -- Puts return values of the iterator into a table rather than in
+    -- a list
     iterator = h.combinations(...)
     items = table.pack(iterator())
     while items do
