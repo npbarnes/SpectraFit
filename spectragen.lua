@@ -136,10 +136,6 @@ parameters ... (numbers).
 --]]
 function SG.calculate.single(spectrumSettings,...)
     local numParam = select('#',...)
-    -- Parameter checking
-    if numParam%2 ~= 0 then
-        error("There must be an even number of parameters (central values followed by distributions.")
-    end
 
     -- Type checking
     for i,v in pairs(table.pack(...)) do
@@ -155,9 +151,7 @@ function SG.calculate.single(spectrumSettings,...)
         intenFunc = error,
     }
 
-    -- TODO: make this work for more than two parameters
-    -- TODO: Include distributed parameters
-    for ffunc,ifunc in Exp.specLines(select(1,...),select(2,...)) do
+    for ffunc,ifunc in Exp.specLines(...) do
         aldermanSettings.freqFunc = ffunc
         aldermanSettings.intenFunc = ifunc
         ret.add(AG.getSpectrum(aldermanSettings, spectrumSettings))
@@ -174,6 +168,11 @@ It expects an even number of those parameters first the central values
 then the distributions in the same order.
 --]]
 function SG.calculate.distributed(spectrumSettings,...)
+    -- Parameter checking
+    if numParam%2 ~= 0 then
+        error("There must be an even number of parameters (central values followed by distributions.")
+    end
+
     error("Distributed simulation is not yet implemented.")
 end
 
