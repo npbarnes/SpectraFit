@@ -177,14 +177,7 @@ local function Spectrum(spectrumSettings)
         file:close()
     end
 
-    function obj.saveCSV(file)
-        file = file or io.output()
-        if type(file) == "string" then
-            file = assert(io.open(file,"w"))
-        elseif io.type(file) ~= "file" then
-            error("Argument must be an open file handle or filename")
-        end
-
+    function obj.getCSV()
         local tab = csv{
             {"n:",    n,     "","Frequency","Intensity"},
             {"min:",  min},
@@ -196,7 +189,18 @@ local function Spectrum(spectrumSettings)
             tab.insert(inten,bin+1,5)
         end
 
-        tab.save(file)
+        return tab
+    end
+
+    function obj.saveCSV(file)
+        file = file or io.output()
+        if type(file) == "string" then
+            file = assert(io.open(file,"w"))
+        elseif io.type(file) ~= "file" then
+            error("Argument must be an open file handle or filename")
+        end
+
+        obj.getCSV().save(file)
     end
 
     return obj
