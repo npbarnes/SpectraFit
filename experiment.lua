@@ -62,10 +62,6 @@ function Exp.loadData(file)
         i = i+1
     end
 
-    -- The number of bins in the simulated spectrum should match the
-    -- experiment. So export as bins.
-    Exp.bins = bincount
-
     return spec
 end
 
