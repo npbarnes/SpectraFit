@@ -129,14 +129,12 @@ local function _paramGen (fmt)
     return ret
 end
 
+SG.calculate = {}
 --[[
 Returns a spectrum representing the result of the simulation using
 parameters ... (numbers).
-
-It expects an even number of those parameters first the central values
-then the distributions in the same order.
 --]]
-function SG.calculate(spectrumSettings,...)
+function SG.calculate.single(spectrumSettings,...)
     local numParam = select('#',...)
     -- Parameter checking
     if numParam%2 ~= 0 then
@@ -166,6 +164,17 @@ function SG.calculate(spectrumSettings,...)
     end
 
     return ret
+end
+
+--[[
+Returns a spectrum representing the result of the simulation using
+parameters ... (numbers).
+
+It expects an even number of those parameters first the central values
+then the distributions in the same order.
+--]]
+function SG.calculate.distributed(spectrumSettings,...)
+    error("Distributed simulation is not yet implemented.")
 end
 
 --[[
