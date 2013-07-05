@@ -182,6 +182,7 @@ returns a table of spectra from all combinations of the given
 parameter lists.
 --]]
 function SG.calculate.all(aldermanSettings, spectrumSettings,...)
+    error("calculate all is not implemented")
     local lists = table.pack(...)
     local ret = {}
     --type checking
