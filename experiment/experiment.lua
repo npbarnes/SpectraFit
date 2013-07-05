@@ -22,7 +22,6 @@ setmetatable(Exp,mt)
 -- have a consistant binsize. I'm attempting to correct this by
 -- inserting values by their position, rather than frequency, and
 -- calculating the appropriate frequencies.
--- This function also sets Exp.bins that should be used when fitting
 function Exp.loadData(file)
     -- If it's a string, then open the file with that name
     -- otherwise it should be an open file handle
