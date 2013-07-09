@@ -161,6 +161,11 @@ function SG.calculate.single(spectrumSettings,...)
     return ret
 end
 
+local function gauss(mean,std,x)
+    return (1/(std*math.sqrt(2*math.pi)))*math.exp(-(x-mean)^2/(2*std^2))
+    end
+end
+
 --[[
 Returns a spectrum representing the result of the simulation using
 parameters ... (numbers).
