@@ -18,4 +18,14 @@ function functional.close(f,v,...)
     end
 end
 
+function functional.map(f,...)
+    vals = table.pack(...)
+    ret = {}
+    for i,v in ipairs(vals) do
+        table.insert(ret,f(v))
+    end
+
+    return table.unpack(ret)
+end
+
 return functional
