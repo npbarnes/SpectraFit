@@ -163,7 +163,25 @@ end
 
 local function gauss(mean,std,x)
     return (1/(std*math.sqrt(2*math.pi)))*math.exp(-(x-mean)^2/(2*std^2))
+end
+
+local function genSets(...)
+    local paramSets = {}
+    local numParam = select('#',...)
+    for i=1,numParam/2 do
+        local tmp = {}
+        local mean = select(i,...)
+        local numstd = settings.sampleRange
+        local std = select(numParam/2+i)
+        local numSamples = settings.numSamples
+
+        for v=mean-numstd*std, mean+numstd*std, 2*numstd*std/numSamples do
+            table.insert(tmp,{value = v,weight = gauss(mean,std,v)})
+        end
+
+        table.insert(paramSets,tmp)
     end
+    return paramSets
 end
 
 --[[
