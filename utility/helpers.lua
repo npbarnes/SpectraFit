@@ -23,8 +23,10 @@ function helpers.combinations(...)
 
     -- if there is only one argument, then it should be a table of
     -- tables, and the combinations of those will be found
+    local istab = false
     if arg.n == 1 then
         arg = arg[1]
+        istab = true
     end
 
     -- error/type checking
@@ -74,8 +76,12 @@ function helpers.combinations(...)
                 table.insert(ret,v[positions[i]])
             end
 
-            -- return the combinations as separate values
-            return table.unpack(ret)
+            -- return the combinations
+            if istab then
+                return ret
+            else
+                return table.unpack(ret)
+            end
         end
     end
 end
