@@ -172,7 +172,7 @@ local function genSets(...)
         local tmp = {}
         local mean = select(i,...)
         local numstd = settings.sampleRange
-        local std = select(numParam/2+i)
+        local std = select(numParam/2+i,...)
         local numSamples = settings.numSamples
 
         for v=mean-numstd*std, mean+numstd*std, 2*numstd*std/numSamples do
