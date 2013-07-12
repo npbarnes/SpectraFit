@@ -193,11 +193,26 @@ then the distributions in the same order.
 --]]
 function SG.calculate.distributed(spectrumSettings,...)
     -- Parameter checking
+    local numParam = select('#',...)
     if numParam%2 ~= 0 then
         error("There must be an even number of parameters (central values followed by distributions.")
     end
 
-    error("Distributed simulation is not yet implemented.")
+    -- Type checking
+    for i,v in pairs(table.pack(...)) do
+        if type(v) ~= "number" then
+            error("Parameter "..i.." is not a number")
+        end
+    end
+
+    local paramSets = genSets(...)
+    local ret = Spectrum(spectrumSettings)
+
+    for params in h.combinations(paramSets) do
+        ret.add(SG.calculate.single(spectrumSettings,table.unpack(params)))
+    end
+
+    return ret
 end
 
 --[[
