@@ -11,6 +11,10 @@ local function incPos (pos,sizes)
     end
 end
 
+-- Uses ipairs, other fields are ignored.
+-- if it gets a table of tables, then the iterator returns a table of
+-- combinations, if it gets multiple tables then the iterator returns
+-- multiple values.
 function helpers.combinations(...)
     local arg = table.pack(...)
 
