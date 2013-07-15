@@ -203,6 +203,13 @@ local function Spectrum(spectrumSettings)
         obj.getCSV().save(file)
     end
 
+    function obj.scale(factor)
+        for i,v in ipairs(spec) do
+            spec[i].inten = spec[i].inten*factor
+        end
+    end
+
+
     return obj
 end
 
