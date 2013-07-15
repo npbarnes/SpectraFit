@@ -184,6 +184,23 @@ local function genSets(...)
     return paramSets
 end
 
+-- takes a table as an argument, but returns multiple values
+local function find(key,tab)
+    local ret = {}
+    for i,v in ipairs(tab) do
+        table.insert(ret,v[key])
+    end
+    return table.unpack(ret)
+end
+
+local function product(...)
+    if ... then
+        return select(1,...)*product(select(2,...))
+    else
+        return 1
+    end
+end
+
 --[[
 Returns a spectrum representing the result of the simulation using
 parameters ... (numbers).
@@ -209,7 +226,10 @@ function SG.calculate.distributed(spectrumSettings,...)
     local ret = Spectrum(spectrumSettings)
 
     for params in h.combinations(paramSets) do
-        ret.add(SG.calculate.single(spectrumSettings,table.unpack(params)))
+        local totWeight = product(find("weight",params))
+        local curSpec = SG.calculate.single(spectrumSettings,find("value",params))
+        curSpec.scale(totWeight)
+        ret.add(curSpec)
     end
 
     return ret
