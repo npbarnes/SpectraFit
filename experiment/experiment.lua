@@ -4,6 +4,7 @@ local f = require "functional"
 local Exp = {
     larmor = 32.239, -- MHz
     spin = 3,
+    constraints = {{ge=0},{ge=0,le=1}}
 }
 
 local mt = {
