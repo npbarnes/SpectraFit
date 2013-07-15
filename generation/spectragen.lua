@@ -165,7 +165,32 @@ local function gauss(mean,std,x)
     return (1/(std*math.sqrt(2*math.pi)))*math.exp(-(x-mean)^2/(2*std^2))
 end
 
-local function genSets(...)
+local function isValid(constraint,v)
+    local valid
+    if constraint.ge then
+        valid = (v >= constraint.ge) and valid
+    end
+    if constraint.le then
+        valid = (v <= constraint.le) and valid
+    end
+    if constraint.gt then
+        valid = (v > constraint.gt) and valid
+    end
+    if constraint.lt then
+        valid = (v < constraint.lt) and valid
+    end
+
+    return valid
+end
+
+-- constraints is a table of tables that specify the constraints on
+-- the parameters
+-- example:
+-- {{ge=0},{ge=0,le=1}}
+-- This makes the first param greater than or equal to 0, and the
+-- second between 0 and 1
+-- use ge, le, gt, or lt
+local function genSets(constraints,...)
     local paramSets = {}
     local numParam = select('#',...)
     for i=1,numParam/2 do
@@ -176,7 +201,9 @@ local function genSets(...)
         local numSamples = settings.numSamples
 
         for v=mean-numstd*std, mean+numstd*std, 2*numstd*std/numSamples do
-            table.insert(tmp,{value = v,weight = gauss(mean,std,v)})
+            if isValid(constraints[i],v) then
+                table.insert(tmp,{value=v, weight=gauss(mean,std,v)})
+            end
         end
 
         table.insert(paramSets,tmp)
@@ -208,7 +235,7 @@ parameters ... (numbers).
 It expects an even number of those parameters first the central values
 then the distributions in the same order.
 --]]
-function SG.calculate.distributed(spectrumSettings,...)
+function SG.calculate.distributed(spectrumSettings,constraints,...)
     -- Parameter checking
     local numParam = select('#',...)
     if numParam%2 ~= 0 then
@@ -222,7 +249,7 @@ function SG.calculate.distributed(spectrumSettings,...)
         end
     end
 
-    local paramSets = genSets(...)
+    local paramSets = genSets(constraints,...)
     local ret = Spectrum(spectrumSettings)
 
     for params in h.combinations(paramSets) do
