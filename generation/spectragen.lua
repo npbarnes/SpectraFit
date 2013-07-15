@@ -166,7 +166,7 @@ local function gauss(mean,std,x)
 end
 
 local function isValid(constraint,v)
-    local valid
+    local valid = true
     if constraint.ge then
         valid = (v >= constraint.ge) and valid
     end
