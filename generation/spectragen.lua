@@ -141,7 +141,7 @@ function SG.calculate.single(spectrumSettings,...)
     -- Type checking
     for i,v in pairs(table.pack(...)) do
         if type(v) ~= "number" then
-            error("Parameter "..i.." is not a number")
+            error("Parameter "..i.." is not a number",2)
         end
     end
 
