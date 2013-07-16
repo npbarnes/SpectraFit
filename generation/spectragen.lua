@@ -165,24 +165,6 @@ local function gauss(mean,std,x)
     return (1/(std*math.sqrt(2*math.pi)))*math.exp(-(x-mean)^2/(2*std^2))
 end
 
-local function isValid(constraint,v)
-    local valid = true
-    if constraint.ge then
-        valid = (v >= constraint.ge) and valid
-    end
-    if constraint.le then
-        valid = (v <= constraint.le) and valid
-    end
-    if constraint.gt then
-        valid = (v > constraint.gt) and valid
-    end
-    if constraint.lt then
-        valid = (v < constraint.lt) and valid
-    end
-
-    return valid
-end
-
 -- constraints is a table of tables that specify the constraints on
 -- the parameters
 -- example:
@@ -201,7 +183,7 @@ local function genSets(constraints,...)
         local numSamples = settings.numSamples
 
         for v=mean-numstd*std, mean+numstd*std, 2*numstd*std/numSamples do
-            if isValid(constraints[i],v) then
+            if h.inConstraint(constraints[i],v) then
                 table.insert(tmp,{value=v, weight=gauss(mean,std,v)})
             end
         end
