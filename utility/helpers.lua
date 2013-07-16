@@ -119,7 +119,7 @@ function helpers.tabCopy(t,seen)
     return nt
 end
 
-local function helpers.inContraint(constraint,v)
+function helpers.inConstraint(constraint,v)
     local valid = true
     if constraint.ge then
         valid = (v >= constraint.ge) and valid
