@@ -94,12 +94,12 @@ local function E_(m)
 end
 
 local function A(m,u,l,n)
-    return -(3*u^2-1+l*n-l*u*n)
+    return -(3*u^2-1+n*l-n*l*(u^2))
 end
 
 local function C(m,u,l,n)
     return (A_(m)*((u^4)*((3-n*l)^2)+2*(u^2)*(-9+2*(n^2)-((n^2)*(l^2)))+((3+n*l)^2)) +
-           (B_(m)*((u^4)*((3-n*l)^2)+(u^2)*(-9+(n^2)+(6*n*l)-(2*(n^2)*(l^2))))))
+           (B_(m)*((u^4)*((3-n*l)^2)+(u^2)*(-9+(n^2)+(6*n*l)-(2*(n^2)*(l^2)))+(-n^2+(n^2)*(l^2)))))
 end
 
 local function E(m,u,l,n)
@@ -111,7 +111,7 @@ local function E(m,u,l,n)
         D_(m)*(
         u^6*(3-n*l)^3+
         u^4*(-63+12*n^2+33*n*l-4*n^3*l-13*n^2*l^2+3*n^3*l^3)+
-        u^2*(45-4*n^2-9*n*l+4*n^3*l+n^2*l^2-3*n^3*l^3)+
+        u^2*(45-4*n^2-9*n*l+4*n^3*l-n^2*l^2-3*n^3*l^3)+
         (-9+3*n*l+5*n^2*l^2+n^3*l^3))+
         E_(m)*(
         u^6*(3-n*l)^3+
