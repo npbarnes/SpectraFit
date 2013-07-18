@@ -5,6 +5,7 @@ spectrumSettings is a table in the form:
 local s = require "serialize"
 local h = require "helpers"
 local csv = require "csv"
+local flot = require "flot"
 
 -- Helper functions
 local function newSpec(spectrumSettings)
@@ -201,6 +202,25 @@ local function Spectrum(spectrumSettings)
         end
 
         obj.getCSV().save(file)
+    end
+
+    function obj.flot(name)
+        name = name or ""
+        local xvalues = {}
+        local yvalues = {}
+        for i,freq,inten in bins() do
+            xvalues[i] = freq
+            yvalues[i] = inten
+        end
+
+        local plot = flot.Plot {
+            xvalues = xvalues,
+            legend = { position = "ne" }
+        }
+
+        plot:add_series(name,yvalues)
+
+        return plot
     end
 
     function obj.scale(factor)

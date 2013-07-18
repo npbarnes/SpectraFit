@@ -13,3 +13,11 @@ of amorphous or polycrystalline samples, but it shouldn't be too hard
 to extend to other systems.
 
 Send an email or pull request if you would like to support or contribute to some other feature.
+
+For best results run using LuaJIT 2.0+ compiled with Lua 5.2 compatability options.
+
+For plotting, SpectraFit uses the Flot javascript library and Lua-Flot by Steve Donovan
+
+http://www.flotcharts.org/
+http://stevedonovan.github.io/lua-flot/flot-lua.html
+https://github.com/stevedonovan/stevedonovan.github.com/blob/master/lua-flot/flot.lua
