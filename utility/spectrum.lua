@@ -60,11 +60,11 @@ local function Spectrum(spectrumSettings)
     --getbin takes an index
     function obj.getBin(i)
         if type(i) ~= "number" then
-            error("bin index must be an integer. Got: "..type(i))
+            error("bin index must be an integer. Got: "..type(i),2)
         elseif i ~= math.floor(i) then
-            error("bin index must be an integer. Got: "..i)
+            error("bin index must be an integer. Got: "..i,2)
         elseif i<1 or i>#spec then
-            error("bin index out of range: 1 - " .. #spec)
+            error("bin index out of range: 1 - " .. #spec,2)
         end
         return spec[i].freq, spec[i].inten
     end
