@@ -313,12 +313,12 @@ function AG.histogram(tents, spectrumSettings)
             -- E
             elseif flow <= fmin and fmid < fhigh and fhigh <= fmax then
                 ret.insert(
-                    ((fmid-fmin)/(fmax-fmin)) +
+                    (((fmid-fmin)/(fmax-fmin)) +
                     ((fhigh-fmid)*(2*fmax-fhigh-fmid)/
-                    ((fmax-fmin)*(fmax-fmid)))*weight,
+                    ((fmax-fmin)*(fmax-fmid))))*weight,
                     i)
             -- F
-            elseif fmin < flow and flow <= fmid and fmid < fhigh and fhigh < fmax then
+            elseif fmin < flow and flow <= fmid and fmid < fhigh and fhigh <= fmax then
                 ret.insert(
                     ((((fmid-flow)*(fmid+flow-2*fmin))/
                     ((fmax-fmin)*(fmid-fmin))) +
