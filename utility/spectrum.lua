@@ -56,8 +56,33 @@ local function Spectrum(spectrumSettings)
         end
     end
 
+    local function xvalues()
+        local xvalues = {}
+        for i,freq,inten in bins() do
+            xvalues[i] = freq
+        end
+        return xvalues
+    end
+
+    local function yvalues()
+        local yvalues = {}
+        for i,freq,inten in bins() do
+            yvalues[i] = inten
+        end
+        return yvalues
+    end
+
     -- Public Methods
     --getbin takes an index
+
+    function obj.getData()
+        local data = {}
+        data.x = xvalues()
+        data.y = yvalues()
+
+        return data
+    end
+
     function obj.getBin(i)
         if type(i) ~= "number" then
             error("bin index must be an integer. Got: "..type(i),2)
@@ -202,25 +227,6 @@ local function Spectrum(spectrumSettings)
         end
 
         obj.getCSV().save(file)
-    end
-
-    function obj.flot(name)
-        name = name or ""
-        local xvalues = {}
-        local yvalues = {}
-        for i,freq,inten in bins() do
-            xvalues[i] = freq
-            yvalues[i] = inten
-        end
-
-        local plot = flot.Plot {
-            xvalues = xvalues,
-            legend = { position = "ne" }
-        }
-
-        plot:add_series(name,yvalues)
-
-        return plot
     end
 
     function obj.scale(factor)
