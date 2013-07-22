@@ -36,7 +36,6 @@ local sinTheta = function (i,j,N)
     return math.sqrt(1 - math.pow(N-i-j,2)/(math.pow(i,2)+math.pow(j,2)+math.pow(N-i-j,2)))
 end
 
--- returns cos^2 of the azimuthal angle phi given i, and j
 local cosPhi = function (i,j,N)
     -- If sinTheta is zero than Phi can be anything
     if sinTheta(i,j,N) == 0 then
