@@ -205,6 +205,7 @@ local function triangles(n)
         return res
     end
 end
+
 --[[
 returns the list of frequencies that can then be used to create the
 "tents" that will finally be used to create a spectrum histogram
@@ -215,7 +216,6 @@ freq.N will store the N value used in the calculation.
 This function should be called once for each line in the single
 crystal spectrum.
 --]]
-
 function AG.frequencies(aldermanSettings)
     local N = aldermanSettings.N
     local freqFunc = aldermanSettings.freqFunc
