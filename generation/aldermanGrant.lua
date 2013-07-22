@@ -38,14 +38,16 @@ end
 
 local cosPhi = function (i,j,N)
     -- If sinTheta is zero than Phi can be anything
+    -- Phi = 0 for simplicity
     if sinTheta(i,j,N) == 0 then
-        return 0
+        return 1
     end
     return ( i/RN(i,j,N) )/( sinTheta(i,j,N) )
 end
 
 local sinPhi = function(i,j,N)
     -- If sinTheta is zero than Phi can be anything
+    -- Phi = 0 for simplicity
     if sinTheta(i,j,N) == 0 then
         return 0
     end
